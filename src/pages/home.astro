@@ -4,9 +4,10 @@ import EntryCard from '../components/cards/EntryCard.astro';
 import Mark from '../components/Mark.astro';
 import Photo from '../components/Photo.astro';
 import TornEdge from '../components/TornEdge.astro';
-import { getAll, getCounts, getSection, coverOf, SECTIONS, SECTION_META, type AnyEntry, type Section } from '../lib/entries';
+import { getAll, getCounts, getSection, coverOf, urlFor, typeLabel, excerptOf, SECTIONS, SECTION_META, type AnyEntry, type Section } from '../lib/entries';
 import { short } from '../lib/dates';
 import type { ImageMetadata } from 'astro';
+import '../styles/home.css';
 import peekFreq from '../assets/placeholder/home/peek-frequencies.jpg';
 
 const all = await getAll();
@@ -29,6 +30,21 @@ const picked = [...firstOfEach, ...all.filter((e) => !firstOfEach.includes(e))].
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const recent = interleave(picked, 8);
 
+// Extra entries per section, so filtering the feed by type has something to show.
+// Hidden by default (and without JS); the filter swaps them in.
+const PER_TYPE = 4;
+const extras = SECTIONS.flatMap((s) => all.filter((e) => e.collection === s && !recent.includes(e)).slice(0, Math.max(0, PER_TYPE - recent.filter((r) => r.collection === s).length)));
+const pool = [...recent, ...extras];
+
+// The pile: every entry, small enough to inline, for "pull one at random".
+const pile = all.map((e) => ({
+  t: e.data.title,
+  u: urlFor(e),
+  l: typeLabel(e),
+  d: short(e.data.date),
+  x: excerptOf(e, 140),
+}));
+
 // Asymmetric 12-col layout slots, by position in the feed.
 const slots = ['s-a', 's-b', 's-c', 's-d', 's-e', 's-f', 's-g', 's-h'];
 
@@ -50,26 +66,40 @@ const today = new Date();
 
   <section class="home-intro wrap">
     <h1 class="home-intro__statement">
-      Notes, pictures, records and <i>places</i>, kept because there's <span class="marked">life<Mark name="underline-gold" class="marked__line" /></span> in the <i>mundane.</i>
+      <span class="nw"><button type="button" class="word" data-show="journal" aria-pressed="false" aria-controls="feed">Notes</button>,</span> <span class="nw"><button type="button" class="word" data-show="visuals" aria-pressed="false" aria-controls="feed">pictures</button>,</span> <span class="nw"><button type="button" class="word" data-show="frequencies" aria-pressed="false" aria-controls="feed">records</button></span> and <span class="nw"><button type="button" class="word" data-show="elsewhere" aria-pressed="false" aria-controls="feed"><i>places</i></button>,</span> kept because there's <span class="marked">life<Mark name="underline-gold" class="marked__line" /></span> in the <i>mundane.</i>
     </h1>
     <p class="home-intro__aside">
       A creative collective of one. Nothing here is trying to sell you anything. It is a place for things that would otherwise go unnoticed: the 07:12 bus, a stairwell at 08:50, a record bought up a flight of stairs in Nairobi.
     </p>
+    <p class="label home-intro__hint" data-hint hidden>Tap a word above — notes, pictures, records, places — to change the feed below.</p>
+    <div class="pile" data-pile hidden>
+      <button type="button" class="pile__btn label" data-pull>Pull one from the pile <span aria-hidden="true">↻</span></button>
+      <div class="pile__slot" aria-live="polite"></div>
+    </div>
+    <script is:inline type="application/json" id="pile-data" set:html={JSON.stringify(pile).replace(/</g, '\\u003c')} />
     <p class="label home-intro__side" aria-hidden="true">Est. 2025 — N° {String(all.length).padStart(3, '0')} entries</p>
   </section>
 
   <section class="recent wrap" aria-labelledby="recent-h">
     <div class="section-head">
       <h2 id="recent-h" class="section-head__title">Recent</h2>
-      <p class="label section-head__meta">The latest {recent.length}, in no particular format</p>
+      <p class="label section-head__meta" data-feed-meta aria-live="polite">The latest {recent.length}, in no particular format</p>
     </div>
-    <div class="feed">
-      {recent.map((e, i) => (
-        <div class:list={['feed__item', slots[i % slots.length], `feed__item--${e.collection}`]} data-reveal>
-          <EntryCard entry={e} />
-        </div>
-      ))}
+    <div class="feed-filter" role="group" aria-label="Show in the feed" data-feed-filter hidden>
+      <button type="button" class="chip" data-show="all" aria-pressed="true" aria-controls="feed">Everything</button>
+      {SECTIONS.map((s) => <button type="button" class="chip" data-show={s} aria-pressed="false" aria-controls="feed">{SECTION_META[s].label}</button>)}
     </div>
+    <div class="feed" id="feed">
+      {pool.map((e, i) => {
+        const inDefault = i < recent.length;
+        return (
+          <div class:list={['feed__item', inDefault && slots[i % slots.length], `feed__item--${e.collection}`]} data-type={e.collection} data-default={inDefault ? '' : undefined} hidden={!inDefault} data-reveal>
+            <EntryCard entry={e} />
+          </div>
+        );
+      })}
+    </div>
+    <p class="feed-more" data-feed-more hidden><a class="arrow-link" href="/everything/">See them all <Mark name="arrow" class="arrow-link__mark" /></a></p>
   </section>
 
   <TornEdge color="beige" />
@@ -102,6 +132,75 @@ const today = new Date();
 </SiteLayout>
 
 <script>
+  // ---------- Feed filter: intro words + chips swap the Recent feed by type ----------
+  const SLOTS = ['s-a', 's-b', 's-c', 's-d', 's-e', 's-f', 's-g', 's-h'];
+  const LABELS: Record<string, string> = { journal: 'notes and writing', visuals: 'pictures', frequencies: 'records', elsewhere: 'places', experiments: 'experiments' };
+  const feed = document.querySelector<HTMLElement>('#feed');
+  const items = [...document.querySelectorAll<HTMLElement>('.feed__item')];
+  const meta = document.querySelector<HTMLElement>('[data-feed-meta]');
+  const more = document.querySelector<HTMLElement>('[data-feed-more]');
+  const filterRow = document.querySelector<HTMLElement>('[data-feed-filter]');
+  const controls = [...document.querySelectorAll<HTMLButtonElement>('[data-show]')];
+  const defaultMeta = meta?.textContent ?? '';
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (filterRow) filterRow.hidden = false;
+  const hint = document.querySelector<HTMLElement>('[data-hint]');
+  if (hint) hint.hidden = false;
+
+  function show(type: string, scroll = false) {
+    const on = items.filter((it) => (type === 'all' ? it.hasAttribute('data-default') : it.dataset.type === type));
+    items.forEach((it) => { it.hidden = !on.includes(it); SLOTS.forEach((c) => it.classList.remove(c)); it.classList.remove('is-entering'); });
+    on.forEach((it, i) => {
+      it.classList.add(SLOTS[i % SLOTS.length]);
+      it.classList.add('is-in'); // never leave a swapped-in card waiting for the scroll reveal
+      if (!reduce) { it.style.setProperty('--i', String(i)); void it.offsetWidth; it.classList.add('is-entering'); }
+    });
+    controls.forEach((b) => {
+      const pressed = b.dataset.show === type;
+      b.setAttribute('aria-pressed', String(b.classList.contains('word') ? pressed && type !== 'all' : pressed));
+    });
+    if (meta) meta.textContent = type === 'all' ? defaultMeta : `Showing ${on.length} — ${LABELS[type]} only`;
+    if (more) more.hidden = type === 'all';
+    const url = new URL(location.href);
+    type === 'all' ? url.searchParams.delete('show') : url.searchParams.set('show', type);
+    history.replaceState(null, '', url);
+    if (scroll && feed) document.querySelector('#recent-h')?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+  controls.forEach((b) => b.addEventListener('click', () => {
+    const t = b.dataset.show!;
+    // clicking an already-active intro word resets to everything
+    const active = b.getAttribute('aria-pressed') === 'true';
+    show(active && b.classList.contains('word') ? 'all' : t, b.classList.contains('word'));
+  }));
+  const initial = new URLSearchParams(location.search).get('show');
+  if (initial && items.some((it) => it.dataset.type === initial)) show(initial);
+
+  // ---------- The pile: pull a random entry ----------
+  const pileBox = document.querySelector<HTMLElement>('[data-pile]');
+  const data = JSON.parse(document.getElementById('pile-data')?.textContent || '[]') as { t: string; u: string; l: string; d: string; x: string }[];
+  if (pileBox && data.length) {
+    pileBox.hidden = false;
+    const slot = pileBox.querySelector<HTMLElement>('.pile__slot')!;
+    const recentPulls: number[] = [];
+    pileBox.querySelector('[data-pull]')!.addEventListener('click', () => {
+      let n: number;
+      do { n = Math.floor(Math.random() * data.length); } while (data.length > 4 && recentPulls.includes(n));
+      recentPulls.push(n); if (recentPulls.length > 4) recentPulls.shift();
+      const e = data[n];
+      const tilt = (Math.random() * 5 - 2.5).toFixed(1);
+      const slip = document.createElement('a');
+      slip.className = 'slip';
+      slip.href = e.u;
+      slip.style.setProperty('--tilt', `${tilt}deg`);
+      const lab = document.createElement('span'); lab.className = 'label slip__meta'; lab.textContent = `${e.d} — ${e.l}`;
+      const tt = document.createElement('span'); tt.className = 'slip__title'; tt.textContent = e.t;
+      const ex = document.createElement('span'); ex.className = 'slip__text'; ex.textContent = e.x;
+      const go = document.createElement('span'); go.className = 'label slip__go'; go.textContent = 'Read it →';
+      slip.append(lab, tt, ex, go);
+      slot.replaceChildren(slip);
+    });
+  }
+
   // Cursor-follow image peek on the section index (fine pointers only).
   if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     document.querySelectorAll<HTMLElement>('.index-list__link').forEach((link) => {
