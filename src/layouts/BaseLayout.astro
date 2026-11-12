@@ -3,13 +3,12 @@
 import '../styles/fonts.css';
 import '../styles/tokens.css';
 import '../styles/base.css';
-import { getImage } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { imageUrl, type Img } from '../lib/images';
 
 interface Props {
   title?: string;
   description?: string;
-  image?: ImageMetadata;
+  image?: Img;
   imageAlt?: string;
   type?: 'website' | 'article';
   bodyClass?: string;
@@ -26,7 +25,7 @@ const {
 } = Astro.props;
 const fullTitle = title ? `${title} — maaru.` : "maaru. — There's life in the mundane.";
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://maaru.me').href;
-const og = image ? new URL((await getImage({ src: image, width: 1200, height: 630, fit: 'cover', format: 'jpg' })).src, Astro.site).href : new URL('/og-image.png', Astro.site).href;
+const og = image ? new URL(await imageUrl(image, 1200, { height: 630, format: 'jpg' }), Astro.site).href : new URL('/og-image.png', Astro.site).href;
 ---
 <!doctype html>
 <html lang="en-GB">

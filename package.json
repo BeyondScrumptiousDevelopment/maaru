@@ -11,6 +11,7 @@
     "check": "astro check",
     "check:links": "node scripts/check-links.mjs",
     "placeholders": "node scripts/make-placeholders.mjs",
+    "sanity:import": "node scripts/sanity-import.mjs",
     "astro": "astro"
   },
   "engines": {
@@ -18,13 +19,26 @@
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.8",
+    "@astrojs/react": "^7.1.8",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
+    "@portabletext/markdown": "^2.9.4",
+    "@sanity/astro": "^3.6.2",
+    "@sanity/client": "^8.16.0",
+    "@sanity/vision": "^6.23.0",
     "astro": "^7.4.11",
-    "sharp": "^0.35.5"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-is": "^19.3.1",
+    "sanity": "^6.23.0",
+    "sharp": "^0.35.5",
+    "styled-components": "^6.6.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
-    "typescript": "^6.0.3"
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "^6.0.3",
+    "yaml": "^2.9.1"
   }
 }

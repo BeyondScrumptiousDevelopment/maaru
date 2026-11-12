@@ -5,12 +5,12 @@ import BaseLayout from './BaseLayout.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Lightbox from '../components/Lightbox.astro';
-import type { ImageMetadata } from 'astro';
+import type { Img } from '../lib/images';
 
 interface Props {
   title?: string;
   description?: string;
-  image?: ImageMetadata;
+  image?: Img;
   imageAlt?: string;
   type?: 'website' | 'article';
   /** 'ink' for the Frequencies section */

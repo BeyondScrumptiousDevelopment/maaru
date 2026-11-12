@@ -20,7 +20,7 @@ const opener = d.image ? { src: d.image, alt: d.imageAlt ?? '', caption: undefin
 const seq = d.image ? d.gallery : d.gallery.slice(1);
 const total = seq.length + (opener ? 1 : 0);
 // Sequence pattern: full-bleed, pair, single small with whitespace, pair… repeated.
-type Block = { kind: 'full' | 'pair' | 'single' | 'single-r'; items: { src: ImageMetadata; alt: string; caption?: string; n: number }[] };
+type Block = { kind: 'full' | 'pair' | 'single' | 'single-r'; items: { src: Img; alt: string; caption?: string; n: number }[] };
 const blocks: Block[] = [];
 const pattern: Block['kind'][] = ['pair', 'single', 'full', 'pair', 'single-r'];
 let k = 0, n = opener ? 2 : 1;
@@ -31,7 +31,7 @@ for (let i = 0; i < seq.length; ) {
   i += take;
 }
 const group = `v-${entry.id}`;
-import type { ImageMetadata } from 'astro';
+import type { Img } from '../../lib/images';
 ---
 <SiteLayout title={d.title} description={excerptOf(entry, 200)} image={opener?.src} imageAlt={opener?.alt} type="article" section="visuals">
   <article class="collection">

@@ -1,13 +1,12 @@
 ---
 /** Video: YouTube/Vimeo via a click-to-load facade; anything else as a native <video>. Never autoplays with sound. */
-import { getImage } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { imageUrl, type Img } from '../lib/images';
 import Embed from './Embed.astro';
 import { youtubeId, vimeoId } from '../lib/embeds';
-interface Props { url: string; poster?: ImageMetadata; caption?: string; title: string; class?: string }
+interface Props { url: string; poster?: Img; caption?: string; title: string; class?: string }
 const { url, poster, caption, title, class: cls = '' } = Astro.props;
 const provider = youtubeId(url) ? 'youtube' : vimeoId(url) ? 'vimeo' : undefined;
-const posterUrl = poster ? (await getImage({ src: poster, width: 1600, format: 'webp' })).src : undefined;
+const posterUrl = poster ? await imageUrl(poster, 1600) : undefined;
 ---
 <figure class:list={['video', cls]}>
   {provider ? (

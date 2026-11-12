@@ -2,14 +2,22 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 import type { SchemaContext } from 'astro/content/config';
+import { sanityEnabled } from './sanity/env';
+import { sanityLoader } from './sanity/loader';
 
 /**
  * Content model. One collection per section, all sharing `base`.
  * Adding a post = adding one Markdown file to src/content/<section>/.
  * The filename (without .md) becomes the URL slug unless `slug` is set.
  */
-const base = ({ image }: SchemaContext) =>
-  z.object({
+/** A Sanity image: already hosted on cdn.sanity.io, with its dimensions. */
+const remoteImage = z.object({ src: z.url(), width: z.number(), height: z.number() });
+/** Local image (Markdown) or remote image (Sanity). */
+const anyImage = (image: SchemaContext['image']) => z.union([remoteImage, image()]);
+
+const base = ({ image: localImage }: SchemaContext) => {
+  const image = () => anyImage(localImage);
+  return z.object({
     id: z.string().optional(),
     title: z.string(),
     slug: z.string().optional(),
@@ -37,12 +45,15 @@ const base = ({ image }: SchemaContext) =>
     draft: z.boolean().default(false),
     links: z.array(z.object({ label: z.string(), url: z.url() })).default([]),
   });
+};
 
 const altRequired = (d: { image?: unknown; imageAlt?: string }) => !d.image || !!d.imageAlt?.trim();
 const altMsg = { message: 'imageAlt is required when image is set', path: ['imageAlt'] };
 
+// Markdown in src/content/<section>/ — or Sanity, once a project ID is set (src/sanity/env.ts).
+const SANITY_TYPE: Record<string, string> = { journal: 'journal', visuals: 'visual', frequencies: 'frequency', elsewhere: 'place', experiments: 'experiment' };
 const loader = (dir: string) =>
-  glob({
+  sanityEnabled ? sanityLoader(SANITY_TYPE[dir]) : glob({
     pattern: '**/[^_]*.{md,mdx}',
     base: `./src/content/${dir}`,
     generateId: ({ entry, data }) => (data.slug as string) || entry.replace(/\.(md|mdx)$/, ''),

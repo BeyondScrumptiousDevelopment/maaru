@@ -1,11 +1,10 @@
 ---
 /** A single lightbox-enabled image with contact-sheet frame number. */
-import { getImage } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
+import { imageUrl, type Img } from '../lib/images';
 import Photo from './Photo.astro';
-interface Props { src: ImageMetadata; alt: string; caption?: string; frame?: number; total?: number; group: string; sizes?: string; class?: string; eager?: boolean }
+interface Props { src: Img; alt: string; caption?: string; frame?: number; total?: number; group: string; sizes?: string; class?: string; eager?: boolean }
 const { src, alt, caption, frame, total, group, sizes, class: cls = '', eager } = Astro.props;
-const big = await getImage({ src, width: Math.min(2400, src.width), format: 'webp' });
+const big = { src: await imageUrl(src, 2400) };
 const n = frame != null ? String(frame).padStart(2, '0') : '';
 ---
 <figure class:list={['frame', cls]}>

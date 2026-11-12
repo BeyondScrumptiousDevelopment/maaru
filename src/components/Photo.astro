@@ -1,9 +1,14 @@
 ---
-/** Responsive photo: AVIF + WebP with a JPEG fallback, explicit dimensions, lazy by default. */
+/**
+ * Responsive photo. Local images: AVIF + WebP + JPEG built by Astro.
+ * Sanity images: resized on Sanity's CDN, which serves AVIF/WebP automatically.
+ * Explicit dimensions and lazy loading either way.
+ */
 import { Picture } from 'astro:assets';
+import { isRemote, cdn, type Img } from '../lib/images';
 import type { ImageMetadata } from 'astro';
 interface Props {
-  src: ImageMetadata;
+  src: Img;
   alt: string;
   sizes?: string;
   widths?: number[];
@@ -13,17 +18,35 @@ interface Props {
 }
 const { src, alt, sizes = '(min-width: 1024px) 50vw, 100vw', widths, class: cls, eager = false, style } = Astro.props;
 const w = (widths ?? [480, 800, 1200, 1600]).filter((x) => x <= src.width).concat(src.width < 480 ? [src.width] : []);
+const remote = isRemote(src);
 ---
-<Picture
-  src={src}
-  alt={alt}
-  widths={w}
-  sizes={sizes}
-  formats={['avif', 'webp']}
-  fallbackFormat="jpg"
-  loading={eager ? 'eager' : 'lazy'}
-  fetchpriority={eager ? 'high' : 'auto'}
-  decoding="async"
-  class={cls}
-  pictureAttributes={{ class: 'photo', style }}
-/>
+{remote ? (
+  <picture class="photo" style={style}>
+    <img
+      src={cdn(src.src, Math.min(1200, src.width))}
+      srcset={w.map((x) => `${cdn(src.src, x)} ${x}w`).join(', ')}
+      sizes={sizes}
+      alt={alt}
+      width={src.width}
+      height={src.height}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      decoding="async"
+      class={cls}
+    />
+  </picture>
+) : (
+  <Picture
+    src={src as ImageMetadata}
+    alt={alt}
+    widths={w}
+    sizes={sizes}
+    formats={['avif', 'webp']}
+    fallbackFormat="jpg"
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+    decoding="async"
+    class={cls}
+    pictureAttributes={{ class: 'photo', style }}
+  />
+)}

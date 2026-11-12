@@ -9,6 +9,7 @@ The website for MAARU: a creative collective of one. It's built with [Astro](htt
 - `/journal`, `/visuals`, `/frequencies`, `/elsewhere`, `/experiments`: each has an index and a page per entry
 - `/everything`: the full archive with search, type and tag filters, and sorting. Filters are kept in the URL so a filtered view can be shared.
 - `/about`, a 404 page, `/journal/rss.xml`, `/sitemap-index.xml` and `/search-index.json`
+- `/admin`: the editing portal (Sanity Studio), once Sanity is connected (see the end of this README)
 
 The brand kit sits untouched in `maaru-brand-kit/`. Open `maaru-brand-kit/brand-guidelines.html` to see the identity, and read `maaru-brand-kit/CLAUDE_CODE_BRIEF.md` for the decisions behind the build.
 
@@ -51,7 +52,7 @@ maaru-brand-kit/    the brand kit, as delivered (not part of the build)
 
 ## Adding content
 
-Every entry is one Markdown file in `src/content/<section>/`. The filename becomes the URL: `src/content/journal/my-post.md` is published at `/journal/my-post/`. Set `slug:` to choose a different URL.
+Once Sanity is connected, add and edit content at `/admin` (see the end of this README). Until then, and as a fallback, every entry is one Markdown file in `src/content/<section>/`. The filename becomes the URL: `src/content/journal/my-post.md` is published at `/journal/my-post/`. Set `slug:` to choose a different URL.
 
 Content is plain Markdown after the frontmatter. Put images in `src/assets/` (any folder, e.g. `src/assets/photos/2026/`) and link to them with a path relative to the Markdown file. Astro resizes them and converts them to AVIF and WebP.
 
@@ -243,21 +244,39 @@ After the first deploy, run the link check against the live site:
 BASE=https://maaru.me npm run check:links
 ```
 
-## Editing content in the browser (Pages CMS)
+## The editing portal: Sanity Studio at /admin
 
-The site is set up for [Pages CMS](https://pagescms.org), a free, open-source CMS that edits the Markdown files in this GitHub repository. Its configuration is `.pages.yml` at the repository root. There's nothing to host and no database.
+Content can be managed in **[Sanity](https://www.sanity.io)**. Its editing app, Sanity Studio, is built into this site at **`/admin`** (e.g. `https://maaru.me/admin`). The Studio has a form for each section: Journal, Visuals, Frequencies, Elsewhere and Experiments. Images go to Sanity's image CDN and are resized and served as AVIF/WebP automatically.
 
-**First time:**
-1. Go to **https://app.pagescms.org** and sign in with GitHub, using the account that can access `BeyondScrumptiousDevelopment/maaru`.
-2. When asked, install the Pages CMS GitHub App and give it access to the `maaru` repository. Because the repo belongs to an organisation, an owner of that organisation may need to approve it.
-3. Open the repository in Pages CMS and pick the branch the live site deploys from.
+**How the switch works:** while `src/sanity/env.ts` has no project ID, the site reads the Markdown files in `src/content/` and `/admin` doesn't exist. Once a project ID is set, the site reads everything from Sanity instead. Pages, cards, search and the archive all work the same either way.
 
-**After that:** open app.pagescms.org, choose maaru, and you'll see Journal, Visuals, Frequencies, Elsewhere and Experiments with a form for each. **Save** commits the change to GitHub, and Cloudflare rebuilds the site in about a minute.
+### One-time setup
 
-- Uploaded images go to `src/assets/uploads/`, and Astro resizes them as usual.
-- Alt text is required whenever you add an image, otherwise the build stops. The form reminds you.
-- Tick **Draft** to keep an entry off the live site.
-- The sample entries point at the placeholder images, so their image previews may look empty in the CMS. Replace them with your own uploads.
-- New entries are named after their title (e.g. "Sunday kettles" becomes `sunday-kettles.md`, at `/journal/sunday-kettles/`).
+1. **Create the project.** Sign up at sanity.io (sign in with GitHub or Google) and create a new project with a dataset called `production`. Copy the **Project ID**; it looks like `a1b2c3d4`.
+2. **Connect it.** Put the ID in `src/sanity/env.ts` (`export const PROJECT_ID = 'a1b2c3d4'`), or set `PUBLIC_SANITY_PROJECT_ID` in Cloudflare (Settings → Variables) and in a local `.env`. The ID isn't secret.
+3. **Allow the site to talk to Sanity.** In sanity.io/manage → your project → **API → CORS origins**, add these, each with **Allow credentials** ticked:
+   `http://localhost:4321`, `https://maaru.me` and your `*.pages.dev` address.
+4. **Move the existing content across** (optional, but you'll want the 26 sample entries or your edits). In **API → Tokens**, create a token with *Editor* rights, then run:
+   ```bash
+   SANITY_WRITE_TOKEN=paste-token-here npm run sanity:import
+   ```
+   This uploads every entry and image. It's safe to re-run, because it updates instead of duplicating. Delete the token afterwards. `npm run sanity:import -- --dry-run` shows what it would send without uploading anything.
+5. **Rebuild the site when you publish.**
+   - In Cloudflare, go to your Pages project → **Settings → Builds → Deploy hooks**, add a hook, and copy its URL.
+   - In sanity.io/manage → **API → Webhooks**, add a webhook with that URL, method **POST**, triggers **Create, Update, Delete**, and filter `_type in ["journal","visual","frequency","place","experiment"]`.
 
-**If you ever outgrow it:** Keystatic (first-class Astro integration) and Decap CMS (needs a small OAuth proxy, which can run on a free Cloudflare Worker) are the alternatives. Check their current pricing and auth setup first.
+   Now every **Publish** in the Studio rebuilds the live site, which takes about a minute.
+
+### Day to day
+
+Go to **maaru.me/admin**, sign in with your Sanity account, pick a section, and **Publish**.
+- **Draft vs live:** unpublished drafts never appear on the site.
+- **URL:** click **Generate** on the *URL* field to create the web address from the title.
+- **Alt text:** required for every image, and the Studio won't publish without it.
+- **Note entries:** a Journal entry of kind *note* shows as large, quiet text with no hero image.
+
+To give someone else access, invite them in sanity.io/manage → **Members**.
+
+**Free plan:** Sanity's free plan comfortably covers a personal site like this. Check sanity.io/pricing for the current limits on users, documents and bandwidth before inviting lots of people. Nothing else here costs money.
+
+**If you ever leave Sanity:** clear the project ID and the site goes back to reading the Markdown files in `src/content/`.
