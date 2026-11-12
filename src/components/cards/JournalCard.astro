@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { short } from '../../lib/dates';
+import { excerptOf, minutesOf, urlFor } from '../../lib/entries';
+import { plain } from '../../lib/text';
+interface Props { entry: CollectionEntry<'journal'>; compact?: boolean; as?: 'h2' | 'h3'; class?: string; style?: string }
+const { entry, compact = false, as: H = 'h3', class: cls = '', style } = Astro.props;
+const d = entry.data;
+const isNote = d.kind === 'note';
+---
+{isNote ? (
+  <article class:list={['card card--note', { 'is-compact': compact }, cls]} style={style}>
+    <p class="label card__meta"><time datetime={d.date.toISOString()}>{short(d.date)}</time> — Journal — Note</p>
+    <H class="visually-hidden">{d.title}</H>
+    <blockquote class="card__quote"><a class="card__link" href={urlFor(entry)}>{plain(entry.body ?? '')}</a></blockquote>
+  </article>
+) : (
+  <article class:list={['card card--journal', { 'is-compact': compact }, cls]} style={style}>
+    <p class="label card__meta"><time datetime={d.date.toISOString()}>{short(d.date)}</time> — Journal — {d.kind}</p>
+    <H class="card__title"><a class="card__link" href={urlFor(entry)}>{d.title}</a></H>
+    {!compact && <p class="card__excerpt">{excerptOf(entry)}</p>}
+    <p class="label card__foot">{minutesOf(entry)} min read</p>
+  </article>
+)}

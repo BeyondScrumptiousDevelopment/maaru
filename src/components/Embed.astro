@@ -1,0 +1,42 @@
+---
+/**
+ * Click-to-load embed facade. Nothing from the provider loads until the visitor asks,
+ * so no third-party cookies or requests on page load. Always offers a plain link too.
+ */
+import { embedSrc, embedHeight, providerName, type Provider } from '../lib/embeds';
+interface Props { provider: Provider; url: string; title?: string; class?: string }
+const { provider, url, title = 'player', class: cls = '' } = Astro.props;
+const src = embedSrc(provider, url);
+const name = providerName[provider];
+const isVideo = provider === 'youtube' || provider === 'vimeo';
+---
+<div class:list={['embed', `embed--${provider}`, { 'embed--video': isVideo }, cls]} data-embed-src={src} data-embed-height={embedHeight[provider]} data-embed-title={`${title} — ${name}`}>
+  {src ? (
+    <button type="button" class="embed__load">
+      <span class="label">Load {name} player</span>
+      <span class="embed__note">Loads content from {name}, which may set cookies.</span>
+    </button>
+  ) : null}
+  <a class="embed__link label" href={url} rel="noopener noreferrer" target="_blank">Open on {name} ↗</a>
+</div>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.embed[data-embed-src]').forEach((box) => {
+    const btn = box.querySelector<HTMLButtonElement>('.embed__load');
+    const src = box.dataset.embedSrc;
+    if (!btn || !src) return;
+    btn.addEventListener('click', () => {
+      const f = document.createElement('iframe');
+      f.src = src;
+      f.title = box.dataset.embedTitle || 'Embedded player';
+      f.loading = 'lazy';
+      f.allow = 'autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture';
+      f.referrerPolicy = 'strict-origin-when-cross-origin';
+      const h = box.dataset.embedHeight;
+      if (h && h !== 'auto') f.style.height = h;
+      btn.replaceWith(f);
+      box.classList.add('is-loaded');
+      f.focus();
+    }, { once: true });
+  });
+</script>

@@ -1,0 +1,11 @@
+---
+/**
+ * "/" — the landing page. Everything for it lives in src/landing/.
+ * To retire it: replace this file with a redirect to /home (see README), or with home.astro's content.
+ */
+import LandingLayout from '../layouts/LandingLayout.astro';
+import Landing from '../landing/Landing.astro';
+---
+<LandingLayout description="maaru. — The Maaru Collective. Ideas, images, sounds and everything else. There's life in the mundane.">
+  <Landing />
+</LandingLayout>

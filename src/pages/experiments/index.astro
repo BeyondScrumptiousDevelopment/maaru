@@ -1,0 +1,43 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ExperimentCard from '../../components/cards/ExperimentCard.astro';
+import { getSection } from '../../lib/entries';
+
+const items = (await getSection('experiments')).sort(
+  (a, b) => (b.data.lastTouched ?? b.data.date).getTime() - (a.data.lastTouched ?? a.data.date).getTime(),
+);
+const statuses = ['in-progress', 'paused', 'done', 'abandoned'] as const;
+---
+<SiteLayout title="Experiments" description="The lab bench: things made, half-made, paused and abandoned on purpose." section="experiments">
+  <header class="page-head page-head--lab wrap">
+    <p class="label page-head__n">05 — Experiments</p>
+    <h1 class="page-head__title">The lab <i>bench</i></h1>
+    <p class="page-head__intro">Projects in every state of finish. Sorted by when they were last touched, so the live ones float to the top and the abandoned ones sink, with dignity.</p>
+  </header>
+  <section class="lab wrap" aria-label="All experiments">
+    <div class="filters" role="group" aria-label="Filter by status" data-filter-group>
+      <button type="button" class="chip" aria-pressed="true" data-filter="all">All <span>{items.length}</span></button>
+      {statuses.filter((s) => items.some((i) => i.data.status === s)).map((s) => (
+        <button type="button" class="chip" aria-pressed="false" data-filter={s}>{s.replace('-', ' ')} <span>{items.filter((i) => i.data.status === s).length}</span></button>
+      ))}
+    </div>
+    <ul class="lab__cards" role="list">
+      {items.map((e) => <li data-status={e.data.status} data-reveal><ExperimentCard entry={e} as="h2" /></li>)}
+    </ul>
+    <p class="filters-empty" hidden>Nothing with that status right now.</p>
+  </section>
+</SiteLayout>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-filter-group]');
+  const items = [...document.querySelectorAll<HTMLElement>('.lab__cards > li')];
+  const empty = document.querySelector<HTMLElement>('.filters-empty');
+  group?.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!b) return;
+    group.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    let n = 0;
+    items.forEach((it) => { const on = b.dataset.filter === 'all' || it.dataset.status === b.dataset.filter; it.hidden = !on; if (on) n++; });
+    if (empty) empty.hidden = n > 0;
+  });
+</script>

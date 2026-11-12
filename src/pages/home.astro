@@ -1,0 +1,118 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import EntryCard from '../components/cards/EntryCard.astro';
+import Mark from '../components/Mark.astro';
+import Photo from '../components/Photo.astro';
+import TornEdge from '../components/TornEdge.astro';
+import { getAll, getCounts, getSection, coverOf, SECTIONS, SECTION_META, type AnyEntry, type Section } from '../lib/entries';
+import { short } from '../lib/dates';
+import type { ImageMetadata } from 'astro';
+import peekFreq from '../assets/placeholder/home/peek-frequencies.jpg';
+
+const all = await getAll();
+const counts = await getCounts();
+
+// Recent: newest first, but never two of the same type side by side.
+function interleave(list: AnyEntry[], n: number) {
+  const pool = [...list];
+  const out: AnyEntry[] = [];
+  while (out.length < n && pool.length) {
+    const prev = out[out.length - 1]?.collection;
+    const idx = pool.findIndex((e) => e.collection !== prev);
+    out.push(pool.splice(idx === -1 ? 0 : idx, 1)[0]);
+  }
+  return out;
+}
+// Newest of every section first (so each format shows up), then the newest of the rest.
+const firstOfEach = SECTIONS.map((s) => all.find((e) => e.collection === s)).filter((e): e is AnyEntry => !!e);
+const picked = [...firstOfEach, ...all.filter((e) => !firstOfEach.includes(e))].slice(0, 8)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+const recent = interleave(picked, 8);
+
+// Asymmetric 12-col layout slots, by position in the feed.
+const slots = ['s-a', 's-b', 's-c', 's-d', 's-e', 's-f', 's-g', 's-h'];
+
+// Peek image for each section in the index.
+const peeks: Partial<Record<Section, { src: ImageMetadata; alt: string }>> = {};
+for (const s of SECTIONS) {
+  const list = await getSection(s);
+  const withImg = list.find((e) => coverOf(e as AnyEntry));
+  if (withImg) peeks[s] = coverOf(withImg as AnyEntry);
+}
+peeks.frequencies ??= { src: peekFreq, alt: '' };
+const today = new Date();
+---
+<SiteLayout footerBg="beige" title="Home" description="The Maaru Collective — an ongoing journal of ideas, images, sounds, places and everything else, kept in London.">
+  <div class="strip">
+    <p class="label">The Maaru Collective — Ongoing — London</p>
+    <p class="label"><time datetime={today.toISOString().slice(0, 10)}>{short(today)}</time> — Issue N° {String(all.length).padStart(3, '0')}</p>
+  </div>
+
+  <section class="home-intro wrap">
+    <h1 class="home-intro__statement">
+      Notes, pictures, records and <i>places</i>, kept because there's <span class="marked">life<Mark name="underline-gold" class="marked__line" /></span> in the <i>mundane.</i>
+    </h1>
+    <p class="home-intro__aside">
+      A creative collective of one. Nothing here is trying to sell you anything. It is a place for things that would otherwise go unnoticed: the 07:12 bus, a stairwell at 08:50, a record bought up a flight of stairs in Nairobi.
+    </p>
+    <p class="label home-intro__side" aria-hidden="true">Est. 2025 — N° {String(all.length).padStart(3, '0')} entries</p>
+  </section>
+
+  <section class="recent wrap" aria-labelledby="recent-h">
+    <div class="section-head">
+      <h2 id="recent-h" class="section-head__title">Recent</h2>
+      <p class="label section-head__meta">The latest {recent.length}, in no particular format</p>
+    </div>
+    <div class="feed">
+      {recent.map((e, i) => (
+        <div class:list={['feed__item', slots[i % slots.length], `feed__item--${e.collection}`]} data-reveal>
+          <EntryCard entry={e} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <TornEdge color="beige" />
+  <section class="sections-index" aria-labelledby="index-h">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="index-h" class="section-head__title">Index</h2>
+        <p class="label section-head__meta">Five ways in</p>
+      </div>
+      <ol class="index-list" role="list">
+        {SECTIONS.map((s) => (
+          <li class="index-list__item">
+            <a href={`/${s}/`} class="index-list__link">
+              <span class="label index-list__n">{SECTION_META[s].n}</span>
+              <span class="index-list__name">{SECTION_META[s].label}</span>
+              <span class="index-list__line">{SECTION_META[s].line}</span>
+              <span class="label index-list__count">{counts[s]} {counts[s] === 1 ? 'entry' : 'entries'}</span>
+              {peeks[s] && (
+                <span class="index-list__peek" aria-hidden="true">
+                  <Photo src={peeks[s]!.src} alt="" sizes="240px" widths={[320, 480]} />
+                </span>
+              )}
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p class="everything-link"><a href="/everything/" class="arrow-link">Everything, in order <Mark name="arrow" class="arrow-link__mark" /></a></p>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  // Cursor-follow image peek on the section index (fine pointers only).
+  if (matchMedia('(pointer: fine)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll<HTMLElement>('.index-list__link').forEach((link) => {
+      const peek = link.querySelector<HTMLElement>('.index-list__peek');
+      if (!peek) return;
+      link.addEventListener('pointermove', (e) => {
+        const r = link.getBoundingClientRect();
+        peek.style.setProperty('--px', `${e.clientX - r.left}px`);
+        peek.style.setProperty('--py', `${e.clientY - r.top}px`);
+      });
+    });
+    document.documentElement.classList.add('has-peek');
+  }
+</script>

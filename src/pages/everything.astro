@@ -1,0 +1,176 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import EntryCard from '../components/cards/EntryCard.astro';
+import { getAll, tagsOf, SECTIONS, SECTION_META } from '../lib/entries';
+import { MONTHS } from '../lib/dates';
+
+const all = await getAll();
+const years = Object.entries(Object.groupBy(all, (e) => String(e.data.date.getUTCFullYear()))).sort((a, b) => +b[0] - +a[0]);
+const tagCounts = new Map<string, number>();
+all.forEach((e) => tagsOf(e).forEach((t) => tagCounts.set(t, (tagCounts.get(t) ?? 0) + 1)));
+const tags = [...tagCounts.entries()].filter(([, n]) => n > 1).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+const key = (e: (typeof all)[number]) => `${e.collection}/${e.id}`;
+---
+<SiteLayout title="Everything" description="The complete Maaru archive, newest first: every note, photograph, record, place and experiment, searchable by type, tag and text." section="everything">
+  <header class="page-head page-head--everything wrap">
+    <p class="label page-head__n">— Everything</p>
+    <h1 class="page-head__title">The whole <i>collection</i>, in order</h1>
+    <p class="page-head__intro">Every entry from every section, grouped by year and month. Search it, narrow it down, or just scroll and see what turns up.</p>
+  </header>
+
+  <section class="archive wrap" aria-label="Archive">
+    <form class="archive__controls" role="search" data-archive-controls hidden>
+      <div class="archive__search">
+        <label for="q" class="label">Search</label>
+        <input id="q" name="q" type="search" placeholder="bus, Nairobi, concrete…" autocomplete="off" />
+      </div>
+      <div class="archive__row" role="group" aria-label="Type">
+        <span class="label archive__row-label">Type</span>
+        {SECTIONS.map((s) => <button type="button" class="chip" aria-pressed="false" data-type={s}>{SECTION_META[s].label}</button>)}
+      </div>
+      <div class="archive__row archive__row--tags" role="group" aria-label="Tags">
+        <span class="label archive__row-label">Tags</span>
+        {tags.map(([t, n]) => <button type="button" class="chip chip--tag" aria-pressed="false" data-tag={t}>#{t} <span>{n}</span></button>)}
+      </div>
+      <div class="archive__status">
+        <p class="label" aria-live="polite"><span data-count>{all.length}</span> of {all.length} entries</p>
+        <button type="button" class="label archive__sort" data-sort>Newest first ↓</button>
+        <button type="button" class="label archive__clear" data-clear>Clear</button>
+      </div>
+    </form>
+
+    <div class="archive__list" data-archive-list>
+      {years.map(([year, list]) => {
+        const months = Object.entries(Object.groupBy(list!, (e) => String(e.data.date.getUTCMonth()))).sort((a, b) => +b[0] - +a[0]);
+        return (
+          <section class="year" data-year={year} aria-labelledby={`year-${year}`}>
+            <h2 id={`year-${year}`} class="year-mark">{year}</h2>
+            <div class="year__months">
+              {months.map(([m, items]) => (
+                <section class="month" data-month={m} aria-label={`${MONTHS[+m]} ${year}`}>
+                  <h3 class="label month__name">{MONTHS[+m]}</h3>
+                  <ul class="month__items" role="list">
+                    {items!.map((e) => (
+                      <li class:list={['arch-item', `arch-item--${e.collection}`]} data-key={key(e)} data-type={e.collection} data-tags={tagsOf(e).join(' ')} data-date={e.data.date.toISOString()}>
+                        <EntryCard entry={e} compact />
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+    </div>
+    <div class="archive__empty" data-empty hidden>
+      <p>Nothing matches that. Try fewer filters, or a different word.</p>
+      <button type="button" class="label archive__clear" data-clear>Clear all filters</button>
+    </div>
+  </section>
+</SiteLayout>
+
+<script>
+  type Doc = { key: string; text: string };
+  const form = document.querySelector<HTMLFormElement>('[data-archive-controls]')!;
+  const list = document.querySelector<HTMLElement>('[data-archive-list]')!;
+  const items = [...list.querySelectorAll<HTMLElement>('.arch-item')];
+  const q = form.querySelector<HTMLInputElement>('#q')!;
+  const countEl = form.querySelector<HTMLElement>('[data-count]')!;
+  const empty = document.querySelector<HTMLElement>('[data-empty]')!;
+  const sortBtn = form.querySelector<HTMLButtonElement>('[data-sort]')!;
+  form.hidden = false; // controls only appear when JS can drive them
+
+  const state = { q: '', types: new Set<string>(), tags: new Set<string>(), order: 'new' as 'new' | 'old' };
+  const text = new Map<string, string>();
+  const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '');
+
+  // Until the index loads, search the visible card text.
+  items.forEach((it) => text.set(it.dataset.key!, norm(it.textContent || '') + ' ' + (it.dataset.tags || '')));
+  fetch('/search-index.json').then((r) => r.json()).then((docs: Doc[]) => {
+    docs.forEach((d) => text.set(d.key, norm(d.text)));
+    apply(false);
+  }).catch(() => {});
+
+  function readURL() {
+    const p = new URLSearchParams(location.search);
+    state.q = p.get('q') ?? '';
+    state.types = new Set((p.get('type') ?? '').split(',').filter(Boolean));
+    state.tags = new Set((p.get('tag') ?? '').split(',').filter(Boolean));
+    state.order = p.get('order') === 'old' ? 'old' : 'new';
+  }
+  function writeURL() {
+    const p = new URLSearchParams();
+    if (state.q) p.set('q', state.q);
+    if (state.types.size) p.set('type', [...state.types].join(','));
+    if (state.tags.size) p.set('tag', [...state.tags].join(','));
+    if (state.order === 'old') p.set('order', 'old');
+    const s = p.toString();
+    history.replaceState(null, '', s ? `?${s}` : location.pathname);
+  }
+
+  function reorder() {
+    const dir = state.order === 'old';
+    const flip = (parent: Element, sel: string, attr: (el: HTMLElement) => number) => {
+      const kids = [...parent.querySelectorAll<HTMLElement>(`:scope > ${sel}`)];
+      kids.sort((a, b) => (dir ? attr(a) - attr(b) : attr(b) - attr(a))).forEach((k) => parent.appendChild(k));
+    };
+    flip(list, '.year', (el) => +el.dataset.year!);
+    list.querySelectorAll('.year__months').forEach((m) => flip(m, '.month', (el) => +el.dataset.month!));
+    list.querySelectorAll('.month__items').forEach((m) => flip(m, '.arch-item', (el) => Date.parse(el.dataset.date!)));
+    sortBtn.textContent = dir ? 'Oldest first ↑' : 'Newest first ↓';
+  }
+
+  function apply(push = true) {
+    const words = norm(state.q).split(/\s+/).filter(Boolean);
+    let n = 0;
+    items.forEach((it) => {
+      const tags = (it.dataset.tags || '').split(' ');
+      const t = text.get(it.dataset.key!) || '';
+      const on = (!state.types.size || state.types.has(it.dataset.type!))
+        && (!state.tags.size || [...state.tags].every((x) => tags.includes(x)))
+        && words.every((w) => t.includes(w));
+      it.hidden = !on;
+      if (on) n++;
+    });
+    list.querySelectorAll<HTMLElement>('.month').forEach((m) => { m.hidden = !m.querySelector('.arch-item:not([hidden])'); });
+    list.querySelectorAll<HTMLElement>('.year').forEach((y) => { y.hidden = !y.querySelector('.month:not([hidden])'); });
+    countEl.textContent = String(n);
+    empty.hidden = n > 0;
+    form.querySelectorAll<HTMLButtonElement>('[data-type]').forEach((b) => b.setAttribute('aria-pressed', String(state.types.has(b.dataset.type!))));
+    form.querySelectorAll<HTMLButtonElement>('[data-tag]').forEach((b) => b.setAttribute('aria-pressed', String(state.tags.has(b.dataset.tag!))));
+    form.querySelectorAll<HTMLButtonElement>('[data-clear]').forEach((b) => (b.disabled = !state.q && !state.types.size && !state.tags.size && state.order === 'new'));
+    if (push) writeURL();
+  }
+
+  const toggle = (set: Set<string>, v: string) => (set.has(v) ? set.delete(v) : set.add(v));
+  form.addEventListener('submit', (e) => e.preventDefault());
+  q.addEventListener('input', () => { state.q = q.value; apply(); });
+  form.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('button');
+    if (!b) return;
+    if (b.dataset.type) toggle(state.types, b.dataset.type);
+    else if (b.dataset.tag) toggle(state.tags, b.dataset.tag);
+    else if (b.hasAttribute('data-sort')) { state.order = state.order === 'new' ? 'old' : 'new'; reorder(); }
+    else return;
+    apply();
+  });
+  document.querySelectorAll<HTMLButtonElement>('[data-clear]').forEach((b) => b.addEventListener('click', () => {
+    state.q = ''; q.value = ''; state.types.clear(); state.tags.clear();
+    if (state.order !== 'new') { state.order = 'new'; reorder(); }
+    apply(); q.focus();
+  }));
+
+  readURL();
+  q.value = state.q;
+  // tags from the URL that have no chip (used once) still filter; add a chip so they can be removed
+  state.tags.forEach((t) => {
+    if (!form.querySelector(`[data-tag="${CSS.escape(t)}"]`)) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip chip--tag'; b.dataset.tag = t; b.textContent = `#${t}`;
+      form.querySelector('.archive__row--tags')!.appendChild(b);
+    }
+  });
+  if (state.order === 'old') reorder();
+  apply(false);
+</script>

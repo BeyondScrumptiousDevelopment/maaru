@@ -1,0 +1,29 @@
+---
+/** Responsive photo: AVIF + WebP with a JPEG fallback, explicit dimensions, lazy by default. */
+import { Picture } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+interface Props {
+  src: ImageMetadata;
+  alt: string;
+  sizes?: string;
+  widths?: number[];
+  class?: string;
+  eager?: boolean;
+  style?: string;
+}
+const { src, alt, sizes = '(min-width: 1024px) 50vw, 100vw', widths, class: cls, eager = false, style } = Astro.props;
+const w = (widths ?? [480, 800, 1200, 1600]).filter((x) => x <= src.width).concat(src.width < 480 ? [src.width] : []);
+---
+<Picture
+  src={src}
+  alt={alt}
+  widths={w}
+  sizes={sizes}
+  formats={['avif', 'webp']}
+  fallbackFormat="jpg"
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : 'auto'}
+  decoding="async"
+  class={cls}
+  pictureAttributes={{ class: 'photo', style }}
+/>

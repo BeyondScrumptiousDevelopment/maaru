@@ -1,0 +1,28 @@
+---
+/** Hand-drawn marks from the kit: underlines, circle, arrow, scribble, cross, brush swipe. Always decorative. */
+import underlineGold from '../assets/graphics/underline-gold.svg?raw';
+import underlineInk from '../assets/graphics/underline-ink.svg?raw';
+import circleGold from '../assets/graphics/circle-gold.svg?raw';
+import arrowInk from '../assets/graphics/arrow-ink.svg?raw';
+import scribbleInk from '../assets/graphics/scribble-ink.svg?raw';
+import crossInk from '../assets/graphics/cross-ink.svg?raw';
+import brushGold from '../assets/graphics/brush-swipe-gold.svg?raw';
+
+const marks = { 'underline-gold': underlineGold, 'underline-ink': underlineInk, 'circle-gold': circleGold, 'arrow': arrowInk, 'scribble': scribbleInk, 'cross': crossInk, 'brush-gold': brushGold };
+export type MarkName = keyof typeof marks;
+interface Props { name: MarkName; class?: string; style?: string; /** let the mark stretch to its box (e.g. a circle around a long phrase) */ stretch?: boolean }
+const { name, class: cls = '', style, stretch = false } = Astro.props;
+const uid = Math.random().toString(36).slice(2, 8);
+// unique mask ids per instance; ink marks become currentColor so they work on any ground
+const svg = marks[name]
+  .replace(/id="(m-[^"]+)"/g, `id="$1-${uid}"`).replace(/url\(#(m-[^)]+)\)/g, `url(#$1-${uid})`)
+  .replace(/fill="#171614"/g, 'fill="currentColor"')
+  .replace('<svg ', `<svg focusable="false"${stretch ? ' preserveAspectRatio="none"' : ''} `);
+---
+<span class:list={['mark', `mark--${name}`, { 'mark--stretch': stretch }, cls]} style={style} aria-hidden="true" set:html={svg} />
+
+<style>
+  .mark { display: inline-block; line-height: 0; pointer-events: none; }
+  .mark :global(svg) { display: block; width: 100%; height: auto; overflow: visible; }
+  .mark--stretch :global(svg) { height: 100%; }
+</style>

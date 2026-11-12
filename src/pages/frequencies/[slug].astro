@@ -1,0 +1,47 @@
+---
+import { render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Sleeve from '../../components/Sleeve.astro';
+import Embed from '../../components/Embed.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { getSection, neighbours, tagsOf, excerptOf, minutesOf } from '../../lib/entries';
+import { long } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const items = await getSection('frequencies');
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const { newer, older } = neighbours(await getSection('frequencies'), entry.id);
+const sides = ['A', 'B'].map((s) => ({ s, tracks: d.tracklist.filter((t) => (t.side ?? 'A') === s) })).filter((x) => x.tracks.length);
+---
+<SiteLayout title={`${d.title} (${d.catalogue})`} description={excerptOf(entry, 200)} type="article" section="frequencies" tone="ink">
+  <article class="release wrap">
+    <div class="release__sleeve">
+      <Sleeve title={d.title} catalogue={d.catalogue} tracks={d.tracklist.length} mood={d.mood} as="p" size="large" />
+    </div>
+    <div class="release__body">
+      <p class="label release__meta">{d.catalogue} — <time datetime={d.date.toISOString()}>{long(d.date)}</time> — {minutesOf(entry)} min read</p>
+      <h1 class="release__title">{d.title}</h1>
+      {d.mood && <p class="label release__mood">Mood: {d.mood}</p>}
+      {d.description && <p class="release__standfirst">{d.description}</p>}
+      <div class="prose prose--ink"><Content /></div>
+      {sides.length > 0 && (
+        <section class="tracklist tracklist--full" aria-label="Tracklist">
+          {sides.map(({ s, tracks }) => (
+            <div class="tracklist__side">
+              <h2 class="label">Side {s}</h2>
+              <ol role="list">{tracks.map((t, i) => <li><span class="label">{s}{i + 1}</span><span>{t.artist} — <i>{t.title}</i></span></li>)}</ol>
+            </div>
+          ))}
+        </section>
+      )}
+      {d.embeds.length > 0 && <div class="release__embeds">{d.embeds.map((em) => <Embed provider={em.provider} url={em.url} title={d.title} />)}</div>}
+      {d.links.length > 0 && <ul class="post__links" role="list">{d.links.map((l) => <li><a href={l.url} rel="noopener">{l.label} ↗</a></li>)}</ul>}
+      {tagsOf(entry).length > 0 && <ul class="tag-list tag-list--row" role="list">{tagsOf(entry).map((t) => <li><a class="label" href={`/everything/?tag=${t}`}>#{t}</a></li>)}</ul>}
+    </div>
+  </article>
+  <PrevNext newer={newer} older={older} section="frequencies" />
+</SiteLayout>

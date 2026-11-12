@@ -1,0 +1,16 @@
+---
+/** Picks the right card treatment for any entry type. */
+import type { AnyEntry } from '../../lib/entries';
+import JournalCard from './JournalCard.astro';
+import VisualCard from './VisualCard.astro';
+import FrequencyCard from './FrequencyCard.astro';
+import ElsewhereCard from './ElsewhereCard.astro';
+import ExperimentCard from './ExperimentCard.astro';
+interface Props { entry: AnyEntry; compact?: boolean; as?: 'h2' | 'h3'; class?: string; style?: string }
+const { entry, ...rest } = Astro.props;
+---
+{entry.collection === 'journal' && <JournalCard entry={entry} {...rest} />}
+{entry.collection === 'visuals' && <VisualCard entry={entry} {...rest} />}
+{entry.collection === 'frequencies' && <FrequencyCard entry={entry} {...rest} />}
+{entry.collection === 'elsewhere' && <ElsewhereCard entry={entry} {...rest} />}
+{entry.collection === 'experiments' && <ExperimentCard entry={entry} {...rest} />}

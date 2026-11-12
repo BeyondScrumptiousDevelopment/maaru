@@ -1,0 +1,231 @@
+/* ==========================================================================
+   The Wall — landing page only. Everything is scoped under .landing so it
+   can never leak into the main site. Uses the shared tokens (tokens.css).
+   ========================================================================== */
+
+.landing {
+  --wall-gutter: var(--gutter);
+  position: relative;
+  min-height: 100svh;
+  overflow: clip;
+  overflow-x: clip;
+  isolation: isolate;
+  background-color: var(--cream);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Plaster wall + faint photocopy speckle */
+.landing__wall {
+  position: absolute; inset: 0; z-index: -1;
+  background-color: var(--cream);
+  background-image: var(--tex-plaster-cream);
+  background-size: 900px;
+  animation: landing-fade 600ms var(--ease-out) both;
+}
+.landing__wall::after {
+  content: ""; position: absolute; inset: 0;
+  background-image: var(--tex-photocopy); background-size: 640px;
+  mix-blend-mode: multiply; opacity: 0.35;
+}
+
+.landing__label {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: var(--step--2);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  line-height: 1.3;
+  color: var(--ink);
+}
+
+.landing__top, .landing__foot {
+  position: relative; z-index: 8;
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.4rem 1rem;
+  padding: var(--wall-gutter);
+}
+.landing__foot { margin-top: auto; }
+.landing__top > *, .landing__foot > * { white-space: nowrap; }
+
+.landing__stage { position: relative; flex: 1; display: flex; flex-direction: column; }
+
+/* ---------- the pieces ---------- */
+.landing__word { position: relative; z-index: 3; margin: 0; line-height: 0; color: var(--ink); }
+.landing__word .logo { width: 100%; }
+
+.landing__scrap {
+  position: absolute; z-index: 4;
+  background-color: var(--beige);
+  background-image: var(--tex-plaster-beige);
+  background-size: 420px;
+  box-shadow: 0 1px 0 rgba(23, 22, 20, 0.06), 0 10px 24px -14px rgba(23, 22, 20, 0.45);
+  clip-path: polygon(0 2%, 14% 0, 31% 3%, 47% 0, 63% 2%, 80% 0, 100% 3%, 97% 12%, 100% 24%, 96% 37%, 99% 50%, 95% 63%, 100% 76%, 96% 88%, 100% 100%, 82% 97%, 66% 100%, 49% 97%, 30% 100%, 13% 97%, 0 100%, 3% 86%, 0 70%, 3% 52%, 0 34%, 2% 17%);
+  animation: landing-drop 700ms var(--ease-out) 650ms both;
+}
+
+.landing__photo {
+  position: relative; z-index: 2;
+  margin: 0;
+  padding: 0.6rem 0.6rem 2.2rem;
+  background-color: var(--cream);
+  background-image: var(--tex-paper);
+  background-size: 300px;
+  box-shadow: 0 2px 2px rgba(23, 22, 20, 0.08), 0 18px 34px -18px rgba(23, 22, 20, 0.55);
+  rotate: var(--r, 3deg);
+  translate: var(--px, 0) var(--py, 0);
+  transition: translate 600ms var(--ease-out);
+  animation: landing-photo 800ms var(--ease-out) var(--d, 700ms) both;
+}
+.landing__photo img { width: 100%; height: auto; filter: contrast(1.02); }
+.landing__photo figcaption { position: absolute; left: 0.75rem; bottom: 0.6rem; font-size: var(--step--2); color: var(--stone-text); }
+.landing__tape {
+  position: absolute; width: 34%; height: 1.4rem; z-index: 1;
+  background: var(--beige); opacity: 0.4;
+}
+.landing__tape--tl { left: -8%; top: -0.5rem; rotate: -32deg; }
+.landing__tape--br { right: -9%; bottom: 0.4rem; rotate: -28deg; }
+.landing__tape--tr { right: -6%; top: -0.4rem; rotate: 28deg; }
+
+.landing__stamp {
+  position: absolute; z-index: 5; color: var(--gold);
+  translate: var(--px, 0) var(--py, 0);
+  transition: translate 600ms var(--ease-out);
+  animation: landing-thump 500ms var(--ease-out) 1250ms both;
+}
+.landing__stamp .stamp { width: 100%; mix-blend-mode: multiply; opacity: 0.92; }
+
+.landing__tagline {
+  position: relative; z-index: 6;
+  font-family: var(--font-serif);
+  font-style: italic; font-weight: 500;
+  font-size: var(--step-4);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink);
+}
+.landing__tagline > span:not(.mark) { display: block; }
+.landing__tagline { padding-bottom: 0.15em; }
+.landing__underline {
+  position: absolute; right: 0; bottom: -0.5em; width: 78%;
+  clip-path: inset(0 100% 0 0);
+  animation: landing-draw 800ms var(--ease-ink) 1500ms both;
+}
+
+.landing__support {
+  position: relative; z-index: 6;
+  font-family: var(--font-sans); font-size: var(--step-0); color: var(--stone-text);
+}
+.landing__circled { position: relative; display: inline-block; color: var(--ink); }
+.landing__circle {
+  position: absolute; left: -38%; top: -60%; width: 176%;
+  clip-path: inset(0 100% 0 0);
+  animation: landing-draw 700ms var(--ease-ink) 1850ms both;
+}
+
+.landing__side {
+  position: absolute; z-index: 6;
+  writing-mode: vertical-rl; transform: rotate(180deg);
+  white-space: nowrap;
+}
+
+/* GO TO HOME — a torn ink ticket */
+.landing__ticket {
+  position: relative; z-index: 7;
+  display: inline-flex; align-items: center; gap: 0.9rem;
+  min-height: 44px;
+  padding: 1rem 1.4rem 1.1rem 1.6rem;
+  background: var(--ink); color: var(--cream);
+  text-decoration: none;
+  font-family: var(--font-label); font-weight: 600;
+  font-size: var(--step-1); letter-spacing: 0.3em; text-transform: uppercase; line-height: 1;
+  rotate: -3deg;
+  clip-path: polygon(0 4%, 3% 0, 22% 3%, 41% 0, 63% 2%, 81% 0, 97% 2%, 100% 0, 99% 50%, 100% 100%, 78% 97%, 60% 100%, 38% 97%, 18% 100%, 2% 100%, 0 96%, 1% 50%);
+  transition: rotate var(--dur-base) var(--ease-out), translate var(--dur-base) var(--ease-out);
+  animation: landing-ticket 450ms var(--ease-out) 2100ms both;
+}
+.landing__ticket::after {
+  content: ""; position: absolute; left: 1.6rem; right: 3.8rem; bottom: 0.45rem; height: 7px;
+  background: url("/graphics/underline-gold.svg") left / 100% 100% no-repeat;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--dur-slow) var(--ease-ink);
+}
+.landing__arrow { width: 2rem; color: var(--cream); transition: translate var(--dur-base) var(--ease-out); }
+.landing__ticket:hover, .landing__ticket:focus-visible { rotate: 0deg; translate: 0 -3px; }
+.landing__ticket:hover::after, .landing__ticket:focus-visible::after { clip-path: inset(0 0 0 0); }
+.landing__ticket:hover .landing__arrow, .landing__ticket:focus-visible .landing__arrow { translate: 6px 0; }
+.landing__ticket:focus-visible { outline: 2px solid var(--gold); outline-offset: 5px; }
+
+.landing__word { animation: landing-slide 1000ms var(--ease-out) 200ms both; }
+.landing__tagline > span:not(.mark), .landing__support { animation: landing-fade 700ms var(--ease-out) 1300ms both; }
+
+/* ---------- Mobile / portrait: recomposed vertically, not shrunk ---------- */
+.landing__stage { padding: 0 var(--wall-gutter) var(--space-m); }
+.landing__word { width: 110vw; margin-left: calc(-1 * var(--wall-gutter) - 13vw); margin-top: 7svh; }
+.landing__scrap--word { left: -8px; top: calc(7svh + 6vw); width: 10vw; height: 22vw; rotate: -5deg; }
+.landing__photo--a { --r: 3deg; width: min(64vw, 340px); align-self: flex-end; margin-top: -4vw; margin-right: 8vw; }
+.landing__photo--b { display: none; }
+.landing__stamp { width: min(28vw, 140px); left: calc(var(--wall-gutter) + 2vw); top: calc(6svh + 30vw); }
+.landing__note { position: relative; z-index: 6; margin-top: var(--space-l); }
+.landing__tagline { font-size: var(--step-4); max-width: 11ch; }
+.landing__underline { left: 0; right: auto; width: 86%; bottom: -0.3em; }
+.landing__support { margin-top: var(--space-m); max-width: 30ch; }
+.landing__side { right: 6px; top: 24svh; font-size: 0.66rem; }
+.landing__ticket { align-self: flex-start; margin-top: var(--space-l); }
+
+/* ---------- Desktop: the full paste-up ---------- */
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) {
+  .landing__stage { padding: 0; min-height: max(calc(100svh - 7rem), 47vw); }
+  .landing__top, .landing__foot { position: absolute; left: 0; right: 0; }
+  .landing__top { top: 0; }
+  .landing__foot { bottom: 0; }
+
+  .landing__word { position: absolute; left: -3.5vw; top: 8.5vw; width: 94vw; margin: 0; }
+  .landing__scrap--word { left: -1.5vw; top: 14vw; width: 8vw; height: 15vw; rotate: -7deg; }
+
+  .landing__photo { position: absolute; padding: 0.7vw 0.7vw 2.4vw; }
+  .landing__photo figcaption { left: 0.9vw; bottom: 0.7vw; }
+  .landing__photo--a { --r: 3.5deg; --d: 700ms; right: 13vw; top: 3vw; width: 19vw; margin: 0; }
+  .landing__photo--b { --r: -3deg; --d: 850ms; display: block; left: 15vw; bottom: calc(1.5vw + 3rem); width: 23vw; }
+
+  .landing__stamp { width: 9vw; left: 34vw; top: auto; bottom: calc(14vw + 3rem); }
+
+  .landing__note { position: absolute; right: 9vw; top: 30vw; margin: 0; text-align: right; }
+  .landing__tagline { max-width: none; }
+  .landing__underline { left: auto; right: -0.2em; width: 82%; bottom: -0.25em; }
+  .landing__support { margin-top: 1.6rem; margin-left: auto; }
+
+  .landing__side { right: calc(var(--wall-gutter) * 0.6); top: 12vw; font-size: var(--step--2); }
+
+  .landing__ticket { position: absolute; left: 47vw; bottom: calc(3.5vw + 3rem); margin: 0; }
+}
+
+@media (min-width: 900px) and (min-aspect-ratio: 1/1) and (max-aspect-ratio: 7/5) {
+  /* squarer screens (e.g. 1024×768): pull the lower pieces up a touch */
+  .landing__note { top: 31vw; }
+  .landing__tagline { font-size: var(--step-3); }
+}
+
+/* ---------- motion ---------- */
+@keyframes landing-fade { from { opacity: 0; } }
+@keyframes landing-slide { from { opacity: 0; transform: translateX(-4%); } }
+@keyframes landing-photo {
+  0% { opacity: 0; transform: translateY(-28px) rotate(2deg); }
+  70% { opacity: 1; transform: translateY(3px) rotate(-0.4deg); }
+  100% { transform: none; }
+}
+@keyframes landing-drop { from { opacity: 0; transform: translateY(-16px); } }
+@keyframes landing-thump {
+  0% { opacity: 0; transform: scale(1.3); }
+  60% { opacity: 1; transform: scale(0.97); }
+  80% { transform: scale(1.08); }
+  100% { transform: scale(1); }
+}
+@keyframes landing-draw { to { clip-path: inset(0 0 0 0); } }
+@keyframes landing-ticket { from { opacity: 0; transform: translateY(10px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .landing *, .landing *::before, .landing *::after { animation: none !important; transition: none !important; }
+  .landing__underline, .landing__circle { clip-path: none; }
+  .landing__ticket::after { clip-path: inset(0 0 0 0); }
+}

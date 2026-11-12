@@ -1,0 +1,69 @@
+---
+/**
+ * The Wall — the landing page composition. Self-contained: its styles (landing.css)
+ * are scoped under .landing and its script (landing.ts) only touches .landing.
+ * Uses the shared brand components (Logo, Stamp, Mark) but nothing else from the site.
+ */
+import './landing.css';
+import { Picture } from 'astro:assets';
+import Logo from '../components/Logo.astro';
+import Stamp from '../components/Stamp.astro';
+import Mark from '../components/Mark.astro';
+import frame07 from './assets/frame-07.jpg';
+import frame12 from './assets/frame-12.jpg';
+---
+<div class="landing">
+  <div class="landing__wall" aria-hidden="true"></div>
+
+  <header class="landing__top">
+    <p class="landing__label">maaru.me — N° 001</p>
+    <p class="landing__label landing__label--right">London — Ongoing</p>
+  </header>
+
+  <main class="landing__stage">
+    <h1 class="landing__word">
+      <Logo label="maaru." />
+    </h1>
+    <div class="landing__scrap landing__scrap--word" aria-hidden="true"></div>
+
+    <figure class="landing__photo landing__photo--a" data-parallax="6">
+      <span class="landing__tape landing__tape--tl" aria-hidden="true"></span>
+      <span class="landing__tape landing__tape--br" aria-hidden="true"></span>
+      <Picture src={frame07} alt="Placeholder film frame — a street running towards a low skyline." widths={[360, 560, 800]} sizes="(min-width: 900px) 24vw, 62vw" formats={['avif', 'webp']} loading="eager" />
+      <figcaption class="landing__label">Frame 07 — Harrow</figcaption>
+    </figure>
+
+    <figure class="landing__photo landing__photo--b" data-parallax="-5">
+      <span class="landing__tape landing__tape--tr" aria-hidden="true"></span>
+      <Picture src={frame12} alt="Placeholder film frame — the sea at Mandvi with a wooden boat." widths={[360, 560, 800]} sizes="(min-width: 900px) 26vw, 70vw" formats={['avif', 'webp']} loading="eager" />
+      <figcaption class="landing__label">Frame 12 — Mandvi</figcaption>
+    </figure>
+
+    <div class="landing__stamp" data-parallax="3"><Stamp rotate={-14} label="The Maaru Collective stamp" /></div>
+
+    <div class="landing__note">
+    <p class="landing__tagline">
+      <span>There's life in</span> <span>the mundane.</span>
+      <Mark name="underline-gold" class="landing__underline" />
+    </p>
+
+    <p class="landing__support">
+      Ideas, images, <span class="landing__circled">sounds<Mark name="circle-gold" class="landing__circle" /></span> and everything else.
+    </p>
+    </div>
+
+    <p class="landing__side landing__label" aria-hidden="true">The Maaru Collective</p>
+
+    <a class="landing__ticket" href="/home/">
+      <span>Go to home</span>
+      <Mark name="arrow" class="landing__arrow" />
+    </a>
+  </main>
+
+  <footer class="landing__foot">
+    <p class="landing__label">The Maaru Collective</p>
+    <p class="landing__label">A creative collective of one</p>
+  </footer>
+</div>
+
+<script src="./landing.ts"></script>

@@ -1,0 +1,17 @@
+---
+/** Torn-paper divider. `color` is the colour of the section the tear belongs to. `flip` puts the tear on the bottom. */
+import cream from '../assets/graphics/torn-edge-cream.svg?raw';
+import beige from '../assets/graphics/torn-edge-beige.svg?raw';
+import ink from '../assets/graphics/torn-edge-ink.svg?raw';
+interface Props { color?: 'cream' | 'beige' | 'ink'; flip?: boolean; mirror?: boolean; class?: string }
+const { color = 'cream', flip = false, mirror = false, class: cls = '' } = Astro.props;
+const svg = { cream, beige, ink }[color].replace('<svg ', '<svg focusable="false" ');
+---
+<div class:list={['torn', `torn--${color}`, { 'torn--flip': flip, 'torn--mirror': mirror }, cls]} aria-hidden="true" set:html={svg} />
+
+<style>
+  .torn { position: relative; z-index: 3; height: clamp(28px, 4vw, 56px); margin-bottom: -1px; line-height: 0; pointer-events: none; }
+  .torn :global(svg) { display: block; width: 100%; height: 100%; }
+  .torn--flip { transform: scaleY(-1); margin-bottom: 0; margin-top: -1px; }
+  .torn--mirror :global(svg) { transform: scaleX(-1); }
+</style>

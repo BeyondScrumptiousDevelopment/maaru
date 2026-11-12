@@ -1,0 +1,9 @@
+---
+/** Shell for the landing page only: head/meta from BaseLayout, nothing from the main site. */
+import BaseLayout from './BaseLayout.astro';
+interface Props { title?: string; description?: string }
+const { title, description } = Astro.props;
+---
+<BaseLayout title={title} description={description} bodyClass="is-landing">
+  <slot />
+</BaseLayout>

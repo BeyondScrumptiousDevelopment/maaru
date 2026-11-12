@@ -1,0 +1,16 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { ago, mmyy } from '../../lib/dates';
+import { excerptOf, urlFor } from '../../lib/entries';
+import { tilt } from '../../lib/text';
+interface Props { entry: CollectionEntry<'experiments'>; compact?: boolean; as?: 'h2' | 'h3'; class?: string; style?: string; still?: boolean }
+const { entry, compact = false, as: H = 'h3', class: cls = '', style = '', still = false } = Astro.props;
+const d = entry.data;
+const touched = d.lastTouched ?? d.updated ?? d.date;
+---
+<article class:list={['card card--index', `is-${d.status}`, { 'is-compact': compact }, cls]} style={`--tilt:${still ? 0 : tilt(entry.id, 1.6)}deg;${style}`}>
+  <p class="card__status"><span class="label status">{d.status.replace('-', ' ')}</span>{d.version && <span class="label card__ver">{d.version}</span>}</p>
+  <H class="card__title"><a class="card__link" href={urlFor(entry)}>{d.title}</a></H>
+  {!compact && <p class="card__excerpt">{excerptOf(entry, 120)}</p>}
+  <p class="card__foot">Started {mmyy(d.date)} — last touched <time datetime={touched.toISOString()}>{ago(touched)}</time></p>
+</article>

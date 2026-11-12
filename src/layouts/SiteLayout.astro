@@ -1,0 +1,45 @@
+---
+/** The main site shell: skip link, nav, footer, grain, lightbox and scroll reveals. */
+import '../styles/global.css';
+import BaseLayout from './BaseLayout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import Lightbox from '../components/Lightbox.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  /** 'ink' for the Frequencies section */
+  tone?: 'cream' | 'ink';
+  section?: string;
+  footerTorn?: boolean;
+  /** colour of the section just above the footer, so the tear blends in */
+  footerBg?: 'cream' | 'beige';
+}
+const { tone = 'cream', section = '', footerTorn = true, footerBg = 'cream', ...meta } = Astro.props;
+---
+<BaseLayout {...meta} bodyClass={`site tone-${tone} ${section ? `section-${section}` : ''}`}>
+  <a class="skip label" href="#main">Skip to content</a>
+  <Nav tone={tone} />
+  <main id="main" tabindex="-1">
+    <slot />
+  </main>
+  <Footer torn={footerTorn} tornBg={footerBg} />
+  <Lightbox />
+  <div class="grain" aria-hidden="true"></div>
+  <script>
+    // Fade images and blocks up once as they enter the viewport. Content is visible without JS.
+    const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    if (els.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('reveal-ready');
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } });
+      }, { rootMargin: '0px 0px -8% 0px' });
+      els.forEach((el) => io.observe(el));
+    }
+  </script>
+</BaseLayout>

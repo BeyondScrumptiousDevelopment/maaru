@@ -1,0 +1,47 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Sleeve from '../../components/Sleeve.astro';
+import Embed from '../../components/Embed.astro';
+import { getSection, urlFor, excerptOf, tagsOf } from '../../lib/entries';
+import { short } from '../../lib/dates';
+
+const items = await getSection('frequencies');
+---
+<SiteLayout title="Frequencies" description="Records, mixes and listening notes from the Maaru Collective. House music, after hours, and whatever was playing on the bus." section="frequencies" tone="ink">
+  <header class="page-head page-head--ink wrap">
+    <p class="label page-head__n">03 — Frequencies</p>
+    <h1 class="page-head__title">The record shop, <i>after hours</i></h1>
+    <p class="page-head__intro">Listening notes, selections and sounds from places. Sleeves are drawn from each entry; players only load if you ask them to.</p>
+  </header>
+
+  <section class="crate wrap" aria-label="All frequencies">
+    {items.map((f) => {
+      const sides = ['A', 'B'].map((s) => ({ s, tracks: f.data.tracklist.filter((t) => (t.side ?? 'A') === s) })).filter((x) => x.tracks.length);
+      return (
+        <article class="record" data-reveal>
+          <a href={urlFor(f)} class="record__sleeve">
+            <Sleeve title={f.data.title} catalogue={f.data.catalogue} tracks={f.data.tracklist.length} mood={f.data.mood} as="p" />
+          </a>
+          <div class="record__notes">
+            <p class="label record__cat">{f.data.catalogue} — <time datetime={f.data.date.toISOString()}>{short(f.data.date)}</time></p>
+            <h2 class="record__title"><a href={urlFor(f)}>{f.data.title}</a></h2>
+            {f.data.mood && <p class="label record__mood">Mood: {f.data.mood}</p>}
+            <p class="record__text">{excerptOf(f, 220)}</p>
+            {sides.length > 0 && (
+              <div class="tracklist">
+                {sides.map(({ s, tracks }) => (
+                  <div class="tracklist__side">
+                    <p class="label">Side {s}</p>
+                    <ol role="list">{tracks.map((t, i) => <li><span class="label">{s}{i + 1}</span><span>{t.artist} — <i>{t.title}</i></span></li>)}</ol>
+                  </div>
+                ))}
+              </div>
+            )}
+            {f.data.embeds.map((em) => <Embed provider={em.provider} url={em.url} title={f.data.title} />)}
+            {tagsOf(f).length > 0 && <ul class="tag-list tag-list--row" role="list">{tagsOf(f).map((t) => <li><a class="label" href={`/everything/?tag=${t}`}>#{t}</a></li>)}</ul>}
+          </div>
+        </article>
+      );
+    })}
+  </section>
+</SiteLayout>

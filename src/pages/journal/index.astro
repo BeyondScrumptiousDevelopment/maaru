@@ -1,0 +1,54 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Mark from '../../components/Mark.astro';
+import { getSection, excerptOf, minutesOf, urlFor } from '../../lib/entries';
+import { short } from '../../lib/dates';
+
+const posts = await getSection('journal');
+const kinds = ['note', 'essay', 'observation', 'story', 'idea'].filter((k) => posts.some((p) => p.data.kind === k));
+---
+<SiteLayout title="Journal" description="Writing from the Maaru Collective: notes, essays, observations and stories about ordinary things." section="journal">
+  <header class="page-head wrap">
+    <p class="label page-head__n">01 — Journal</p>
+    <h1 class="page-head__title">Things <i>noticed</i> on the way somewhere else</h1>
+    <p class="page-head__intro">Notes, essays, observations and the occasional story. Some are a sentence long. Listed newest first, like a table of contents for an issue that never closes.</p>
+  </header>
+
+  <section class="toc wrap" aria-label="All journal entries">
+    <div class="filters" role="group" aria-label="Filter by kind" data-filter-group>
+      <button type="button" class="chip" aria-pressed="true" data-filter="all">All <span>{posts.length}</span></button>
+      {kinds.map((k) => (
+        <button type="button" class="chip" aria-pressed="false" data-filter={k}>{k}s <span>{posts.filter((p) => p.data.kind === k).length}</span></button>
+      ))}
+    </div>
+    <ol class="toc__list" role="list">
+      {posts.map((p) => (
+        <li class="toc__row" data-kind={p.data.kind}>
+          <a href={urlFor(p)} class="toc__link">
+            <time class="label toc__date" datetime={p.data.date.toISOString()}>{short(p.data.date)}</time>
+            <span class="toc__title">{p.data.title}</span>
+            <span class="label toc__kind">{p.data.kind} — {minutesOf(p)} min</span>
+            <span class="toc__excerpt">{excerptOf(p, 150)}</span>
+          </a>
+        </li>
+      ))}
+    </ol>
+    <p class="toc__empty" hidden>Nothing of that kind yet.</p>
+    <p class="toc__rss label"><a href="/journal/rss.xml">Subscribe via RSS <Mark name="arrow" class="inline-arrow" /></a></p>
+  </section>
+</SiteLayout>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-filter-group]');
+  const rows = [...document.querySelectorAll<HTMLElement>('.toc__row')];
+  const empty = document.querySelector<HTMLElement>('.toc__empty');
+  group?.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!b) return;
+    const f = b.dataset.filter!;
+    group.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    let shown = 0;
+    rows.forEach((r) => { const on = f === 'all' || r.dataset.kind === f; r.hidden = !on; if (on) shown++; });
+    if (empty) empty.hidden = shown > 0;
+  });
+</script>

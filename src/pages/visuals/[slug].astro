@@ -1,0 +1,72 @@
+---
+import { render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import VideoPlayer from '../../components/VideoPlayer.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { getSection, neighbours, tagsOf, excerptOf } from '../../lib/entries';
+import { long, coords } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const items = await getSection('visuals');
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const { newer, older } = neighbours(await getSection('visuals'), entry.id);
+
+const opener = d.image ? { src: d.image, alt: d.imageAlt ?? '', caption: undefined as string | undefined } : d.gallery[0];
+const seq = d.image ? d.gallery : d.gallery.slice(1);
+const total = seq.length + (opener ? 1 : 0);
+// Sequence pattern: full-bleed, pair, single small with whitespace, pair… repeated.
+type Block = { kind: 'full' | 'pair' | 'single' | 'single-r'; items: { src: ImageMetadata; alt: string; caption?: string; n: number }[] };
+const blocks: Block[] = [];
+const pattern: Block['kind'][] = ['pair', 'single', 'full', 'pair', 'single-r'];
+let k = 0, n = opener ? 2 : 1;
+for (let i = 0; i < seq.length; ) {
+  const kind = pattern[k++ % pattern.length];
+  const take = kind === 'pair' && i + 1 < seq.length ? 2 : 1;
+  blocks.push({ kind: take === 1 && kind === 'pair' ? 'single' : kind, items: seq.slice(i, i + take).map((g) => ({ ...g, n: n++ })) });
+  i += take;
+}
+const group = `v-${entry.id}`;
+import type { ImageMetadata } from 'astro';
+---
+<SiteLayout title={d.title} description={excerptOf(entry, 200)} image={opener?.src} imageAlt={opener?.alt} type="article" section="visuals">
+  <article class="collection">
+    {opener && (
+      <div class="collection__opener">
+        <Gallery src={opener.src} alt={opener.alt} caption={opener.caption} frame={1} total={total} group={group} sizes="100vw" eager class="frame--bleed" />
+      </div>
+    )}
+    <header class="collection__head wrap">
+      <p class="label collection__meta">
+        {[d.roll, d.format, long(d.date)].filter(Boolean).join(' — ')}
+        {d.location && <> — {d.location.name}{d.location.lat != null && `, ${coords(d.location.lat, d.location.lng)}`}</>}
+      </p>
+      <h1 class="collection__title">{d.title}</h1>
+      <div class="collection__intro prose"><Content /></div>
+    </header>
+
+    {d.video && (
+      <div class="collection__video wrap">
+        <VideoPlayer url={d.video.url} poster={d.video.poster} caption={d.video.caption} title={d.title} />
+      </div>
+    )}
+
+    <div class="sequence wrap">
+      {blocks.map((b, bi) => (
+        <div class:list={['sequence__block', `sequence__block--${b.kind}`]} data-reveal>
+          {b.items.map((g) => <Gallery src={g.src} alt={g.alt} caption={g.caption} frame={g.n} total={total} group={group} sizes={b.kind === 'full' ? '(min-width: 1440px) 1360px, 100vw' : b.kind === 'pair' ? '(min-width: 768px) 45vw, 100vw' : '(min-width: 768px) 40vw, 100vw'} />)}
+          {bi === 1 && d.description && <p class="sequence__interlude">{d.description}</p>}
+        </div>
+      ))}
+    </div>
+
+    {tagsOf(entry).length > 0 && (
+      <ul class="tag-list tag-list--row wrap" role="list">{tagsOf(entry).map((t) => <li><a class="label" href={`/everything/?tag=${t}`}>#{t}</a></li>)}</ul>
+    )}
+  </article>
+  <PrevNext newer={newer} older={older} section="visuals" />
+</SiteLayout>

@@ -1,0 +1,63 @@
+---
+import { render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Logo from '../../components/Logo.astro';
+import Photo from '../../components/Photo.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { getSection, minutesOf, neighbours, tagsOf, excerptOf } from '../../lib/entries';
+import { long, short, coords } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const posts = await getSection('journal');
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post } }));
+}
+const { post } = Astro.props;
+const { Content } = await render(post);
+const d = post.data;
+const list = await getSection('journal');
+const { newer, older } = neighbours(list, post.id);
+const isNote = d.kind === 'note';
+---
+<SiteLayout title={d.title} description={excerptOf(post, 200)} image={d.image} imageAlt={d.imageAlt} type="article" section="journal">
+  {isNote ? (
+    <article class="note-page wrap">
+      <p class="label note-page__meta"><time datetime={d.date.toISOString()}>{long(d.date)}</time> — Journal — Note</p>
+      <h1 class="visually-hidden">{d.title}</h1>
+      <div class="note-page__body"><Content /></div>
+      {d.location && <p class="label note-page__place">{d.location.name}</p>}
+      <Logo variant="monogram" label="" class="end-mark" />
+    </article>
+  ) : (
+    <article class="post">
+      <header class="post__head wrap">
+        <p class="label post__meta">
+          <time datetime={d.date.toISOString()}>{long(d.date)}</time> — {d.kind} — {minutesOf(post)} min read
+        </p>
+        <h1 class="post__title">{d.title}</h1>
+        {d.description && <p class="post__standfirst">{d.description}</p>}
+      </header>
+      {d.image && (
+        <figure class="post__hero wrap">
+          <Photo src={d.image} alt={d.imageAlt ?? ''} sizes="(min-width: 1200px) 1100px, 100vw" eager />
+          {d.location && <figcaption class="label">{d.location.name}{d.location.lat != null && ` — ${coords(d.location.lat, d.location.lng)}`}</figcaption>}
+        </figure>
+      )}
+      <div class="post__grid wrap">
+        <aside class="post__margin" aria-label="About this entry">
+          <p class="label">Filed {short(d.date)}</p>
+          {d.updated && <p class="label">Updated {short(d.updated)}</p>}
+          {d.location && <p class="label">{d.location.name}{d.location.country && `, ${d.location.country}`}</p>}
+          {tagsOf(post).length > 0 && (
+            <ul class="tag-list" role="list">{tagsOf(post).map((t) => <li><a class="label" href={`/everything/?tag=${t}`}>#{t}</a></li>)}</ul>
+          )}
+        </aside>
+        <div class="prose prose--dropcap"><Content /></div>
+      </div>
+      {d.links.length > 0 && (
+        <ul class="post__links wrap" role="list">{d.links.map((l) => <li><a href={l.url} rel="noopener">{l.label} ↗</a></li>)}</ul>
+      )}
+      <Logo variant="monogram" label="" class="end-mark" />
+    </article>
+  )}
+  <PrevNext newer={newer} older={older} section="journal" />
+</SiteLayout>

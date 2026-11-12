@@ -1,0 +1,44 @@
+---
+/**
+ * Typographic record sleeve, generated from the entry: catalogue number picks the
+ * colour field and the circle's position. Never real album artwork.
+ */
+import { hash } from '../lib/text';
+interface Props {
+  title: string;
+  catalogue: string;
+  tracks?: number;
+  mood?: string;
+  as?: 'h2' | 'h3' | 'p';
+  size?: 'normal' | 'small' | 'large';
+  class?: string;
+}
+const { title, catalogue, tracks = 0, mood, as: Tag = 'h3', size = 'normal', class: cls = '' } = Astro.props;
+const h = hash(catalogue);
+const fields = [
+  { bg: 'var(--ink)', fg: 'var(--cream)', dot: 'var(--gold)', label: 'var(--beige)' },
+  { bg: 'var(--beige)', fg: 'var(--ink)', dot: 'var(--cream)', label: 'var(--ink)' },
+  { bg: 'var(--ink-soft)', fg: 'var(--cream)', dot: 'var(--stone)', label: 'var(--gold)' },
+  { bg: 'var(--stone)', fg: 'var(--cream)', dot: 'var(--ink)', label: 'var(--cream)' },
+  { bg: 'var(--cream-deep)', fg: 'var(--ink)', dot: 'var(--gold)', label: 'var(--ink)' },
+  { bg: 'var(--ink)', fg: 'var(--cream)', dot: 'var(--stone)', label: 'var(--beige)' },
+];
+const f = fields[h % fields.length];
+const positions = [
+  { x: '68%', y: '30%', r: '70%' }, { x: '78%', y: '22%', r: '60%' }, { x: '60%', y: '26%', r: '56%' },
+  { x: '86%', y: '38%', r: '66%' }, { x: '72%', y: '16%', r: '84%' },
+];
+const p = positions[(h >> 4) % positions.length];
+const words = title.trim().split(/\s+/);
+const last = words.length > 1 ? words.pop() : '';
+const side = tracks ? `SIDE A — ${tracks} TRACK${tracks === 1 ? '' : 'S'}` : mood ? mood.toUpperCase() : 'SIDE A';
+---
+<div
+  class:list={['sleeve', `sleeve--${size}`, cls]}
+  style={`--s-bg:${f.bg};--s-fg:${f.fg};--s-dot:${f.dot};--s-label:${f.label};--s-x:${p.x};--s-y:${p.y};--s-r:${p.r}`}
+>
+  <span class="sleeve__dot" aria-hidden="true"></span>
+  <span class="label sleeve__cat">Frequencies — {catalogue}</span>
+  <Tag class="sleeve__title">{words.join(' ')}{last && <> <i>{last}</i></>}</Tag>
+  <span class="label sleeve__side">{side}</span>
+</div>

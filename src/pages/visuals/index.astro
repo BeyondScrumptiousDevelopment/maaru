@@ -1,0 +1,57 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Photo from '../../components/Photo.astro';
+import { getSection, coverOf, urlFor } from '../../lib/entries';
+import { short } from '../../lib/dates';
+
+const items = await getSection('visuals');
+const formats = ['photo', 'video', 'mixed'].filter((f) => items.some((i) => i.data.format === f));
+// editorial grid: varied spans/offsets by position; portrait images get taller slots
+const layout = ['v-wide', 'v-tall', 'v-mid', 'v-small', 'v-wide-r', 'v-mid-r'];
+---
+<SiteLayout title="Visuals" description="Photographs and moving pictures from the Maaru Collective, kept as rolls and sequences." section="visuals">
+  <header class="page-head page-head--visuals wrap">
+    <p class="label page-head__n">02 — Visuals</p>
+    <h1 class="page-head__title">Rolls, <i>sequences</i>, the odd moving picture</h1>
+    <p class="page-head__intro">Collections of photographs and video. Click into one to see it as a sequence; click any frame to see it big.</p>
+  </header>
+
+  <section class="vgrid-wrap wrap" aria-label="Visual collections">
+    <div class="filters" role="group" aria-label="Filter by format" data-filter-group>
+      <button type="button" class="chip" aria-pressed="true" data-filter="all">All <span>{items.length}</span></button>
+      {formats.map((f) => <button type="button" class="chip" aria-pressed="false" data-filter={f}>{f} <span>{items.filter((i) => i.data.format === f).length}</span></button>)}
+    </div>
+    <ul class="vgrid" role="list">
+      {items.map((v, i) => {
+        const c = coverOf(v);
+        const frames = v.data.gallery.length;
+        return (
+          <li class:list={['vgrid__item', layout[i % layout.length], { 'is-portrait': c && c.src.height > c.src.width }]} data-format={v.data.format} data-reveal>
+            <a href={urlFor(v)} class="vgrid__link">
+              {c && <Photo src={c.src} alt={c.alt} sizes="(min-width: 1024px) 50vw, 100vw" eager={i < 2} />}
+              <span class="vgrid__cap">
+                <span class="label">{[v.data.roll, v.data.format === 'video' ? 'VIDEO' : `${frames} FRAMES`].filter(Boolean).join(' / ')} — {short(v.data.date)}</span>
+                <span class="vgrid__title">{v.data.title}</span>
+              </span>
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+    <p class="filters-empty" hidden>Nothing in that format yet.</p>
+  </section>
+</SiteLayout>
+
+<script>
+  const group = document.querySelector<HTMLElement>('[data-filter-group]');
+  const items = [...document.querySelectorAll<HTMLElement>('.vgrid__item')];
+  const empty = document.querySelector<HTMLElement>('.filters-empty');
+  group?.addEventListener('click', (e) => {
+    const b = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+    if (!b) return;
+    group.querySelectorAll('[data-filter]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    let n = 0;
+    items.forEach((it) => { const on = b.dataset.filter === 'all' || it.dataset.format === b.dataset.filter; it.hidden = !on; if (on) n++; });
+    if (empty) empty.hidden = n > 0;
+  });
+</script>

@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>maaru. — brand guidelines</title>
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="tokens/tokens.css">
+<style>
+/* local font paths so this page works when opened straight from the folder */
+@font-face{font-family:"Nunito Sans";font-weight:400;src:url(fonts/nunito-sans-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito Sans";font-weight:300;src:url(fonts/nunito-sans-latin-300-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito Sans";font-weight:400;font-style:italic;src:url(fonts/nunito-sans-latin-400-italic.woff2) format("woff2")}
+@font-face{font-family:"Nunito Sans";font-weight:600;src:url(fonts/nunito-sans-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito Sans";font-weight:700;src:url(fonts/nunito-sans-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Nunito";font-weight:800;src:url(fonts/nunito-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:500;src:url(fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:500;font-style:italic;src:url(fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:600;src:url(fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Cormorant Garamond";font-weight:600;font-style:italic;src:url(fonts/cormorant-garamond-latin-600-italic.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-weight:500;src:url(fonts/barlow-condensed-latin-500-normal.woff2) format("woff2")}
+@font-face{font-family:"Barlow Condensed";font-weight:600;src:url(fonts/barlow-condensed-latin-600-normal.woff2) format("woff2")}
+:root{
+  --tex-plaster-cream:url(textures/plaster-cream.jpg);--tex-plaster-beige:url(textures/plaster-beige.jpg);
+  --tex-concrete:url(textures/concrete-stone.jpg);--tex-wall-ink:url(textures/wall-ink.jpg);
+  --tex-paper:url(textures/paper-cream.jpg);--tex-grain:url(textures/grain-overlay.png);--tex-photocopy:url(textures/photocopy-overlay.png);
+}
+*{box-sizing:border-box;margin:0}
+html{background:var(--cream)}
+body{font-family:var(--font-sans);color:var(--ink);font-size:var(--step-0);line-height:var(--leading-body);overflow-x:clip}
+img{display:block;max-width:100%;height:auto}
+a{color:inherit}
+.label{font-family:var(--font-label);font-weight:600;text-transform:uppercase;letter-spacing:var(--tracking-label);font-size:var(--step--1)}
+.muted{color:var(--text-muted)}
+.wrap{max-width:var(--page-max);margin:0 auto;padding:0 var(--gutter)}
+.grain{background-image:url(textures/grain-overlay.png);background-size:256px}
+
+/* ---- cover: the wall ---- */
+.cover{position:relative;min-height:100svh;background:var(--tex-plaster-cream) center/700px;overflow:hidden;display:grid;padding:var(--gutter)}
+.cover::after{content:"";position:absolute;inset:0;background:url(textures/photocopy-overlay.png);background-size:420px;mix-blend-mode:multiply;opacity:.6;pointer-events:none}
+.cover .top{display:flex;justify-content:space-between;gap:1rem;align-self:start;position:relative;z-index:3}
+.cover .word{position:absolute;left:-3vw;top:28%;width:min(112vw,1500px);z-index:2}
+.cover .scrap{position:absolute;right:7vw;top:16%;width:clamp(150px,22vw,320px);aspect-ratio:4/5;background:var(--tex-concrete) center/500px;transform:rotate(3.5deg);z-index:1;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.cover .scrap::before,.cover .scrap::after{content:"";position:absolute;width:70px;height:22px;background:rgba(199,180,157,.75)}
+.cover .scrap::before{top:-9px;left:12px;transform:rotate(-8deg)}
+.cover .scrap::after{bottom:-8px;right:10px;transform:rotate(6deg)}
+.cover .scrap span{position:absolute;bottom:-34px;left:0;color:var(--stone-text)}
+.cover .stamp{position:absolute;right:30vw;top:63%;width:clamp(120px,14vw,210px);transform:rotate(-12deg);z-index:3;opacity:.92}
+.cover .tagline{position:absolute;right:var(--gutter);bottom:16%;z-index:3;text-align:right}
+.cover .tagline em{font-family:var(--font-serif);font-style:italic;font-weight:500;font-size:var(--step-3);line-height:1.05;display:block}
+.cover .tagline img{width:70%;margin:.3rem 0 0 auto}
+.cover .side{position:absolute;right:calc(var(--gutter)*.55);top:18%;writing-mode:vertical-rl;z-index:3;white-space:nowrap;color:var(--stone-text)}
+.cover .bottom{align-self:end;position:relative;z-index:3;display:flex;justify-content:space-between;align-items:end;gap:1rem}
+@media (max-width:700px){
+  .cover .word{top:22%;width:118vw}
+  .cover .scrap{top:auto;bottom:30%;right:auto;left:8vw;width:46vw;transform:rotate(-3deg)}
+  .cover .stamp{right:6vw;top:auto;bottom:24%;width:30vw}
+  .cover .tagline{bottom:9%;left:var(--gutter)}
+  .cover .side{display:none}
+  .cover .scrap span{bottom:-46px}
+}
+
+/* ---- sections ---- */
+section{padding:var(--space-2xl) 0;position:relative}
+.sec-head{display:grid;grid-template-columns:auto 1fr;gap:var(--space-m);align-items:baseline;margin-bottom:var(--space-xl)}
+.sec-num{font-family:var(--font-serif);font-size:var(--step-5);line-height:.8;color:var(--gold)}
+.sec-head h2{font-family:var(--font-serif);font-weight:500;font-size:var(--step-4);line-height:var(--leading-tight);letter-spacing:var(--tracking-tight)}
+.sec-head h2 i{font-weight:500}
+.sec-head p{grid-column:2;max-width:56ch;color:var(--text-muted);margin-top:var(--space-s)}
+.torn{display:block;width:100%;height:46px;object-fit:fill}
+.on-ink{background:var(--ink) var(--tex-wall-ink);background-size:600px;color:var(--cream)}
+.on-ink .muted,.on-ink .sec-head p{color:var(--beige)}
+.on-ink .t-cream .muted{color:var(--stone-text)}
+.on-beige{background:var(--tex-plaster-beige);background-size:700px}
+
+.grid{display:grid;gap:var(--space-m)}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.tile{padding:var(--space-l);min-height:220px;display:grid;place-items:center;position:relative}
+.tile .label{position:absolute;left:var(--space-s);bottom:var(--space-2xs)}
+.t-cream{background:var(--cream);outline:1px solid var(--rule)}
+.t-ink{background:var(--ink);color:var(--cream)}
+.t-beige{background:var(--beige)}
+.t-paper{background:var(--tex-paper);background-size:400px}
+.rules{columns:2 300px;column-gap:var(--space-l)}
+.rules li{break-inside:avoid;margin-bottom:.7rem}
+ul.clean{list-style:none;padding:0}
+ul.clean li{padding:.6rem 0;border-top:1px solid var(--rule)}
+.on-ink ul.clean li{border-color:var(--rule-light)}
+.dont{position:relative}
+.dont::after{content:"";position:absolute;right:10px;top:10px;width:26px;height:26px;background:url(graphics/cross-ink.svg) center/contain no-repeat}
+
+/* swatches */
+.sw{min-height:250px;padding:var(--space-m);display:flex;flex-direction:column;justify-content:space-between}
+.sw b{font-family:var(--font-serif);font-weight:500;font-size:var(--step-3);line-height:1}
+.sw code{font-family:var(--font-label);letter-spacing:.12em;font-size:var(--step-0)}
+.ratio{display:flex;gap:.5rem;flex-wrap:wrap}
+.ratio span{font-family:var(--font-label);font-size:var(--step--1);letter-spacing:.1em;padding:.15rem .5rem;border:1px solid currentColor}
+
+/* type */
+.spec{border-top:1px solid var(--rule);padding:var(--space-l) 0;display:grid;grid-template-columns:minmax(0,220px) 1fr;gap:var(--space-m)}
+@media (max-width:700px){.spec{grid-template-columns:1fr}}
+.spec .big-serif{font-family:var(--font-serif);font-weight:500;font-size:var(--step-5);line-height:var(--leading-tight);letter-spacing:var(--tracking-tight)}
+.spec .big-serif i{font-weight:500}
+.spec .sans{font-size:var(--step-1);max-width:46ch}
+.spec .cond{font-family:var(--font-label);font-weight:600;letter-spacing:var(--tracking-label);text-transform:uppercase;font-size:var(--step-2);line-height:1.3}
+
+/* textures */
+.tex{aspect-ratio:4/3;background-size:500px;position:relative}
+.tex .label{position:absolute;left:.8rem;bottom:.5rem;background:var(--cream);padding:0 .4rem;color:var(--ink)}
+.marks .tile{min-height:170px}
+
+/* in use */
+.mock{background:var(--cream);color:var(--ink);outline:1px solid var(--rule)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:1rem 1.4rem;gap:1rem;border-bottom:1px solid var(--rule)}
+.nav img{width:110px}
+.nav ul{display:flex;gap:1.3rem;list-style:none;padding:0;flex-wrap:wrap}
+.nav li{position:relative}
+.nav li.active::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-8px;height:8px;background:url(graphics/underline-gold.svg) center/100% 100% no-repeat}
+.nav .menu{display:none}
+@media (max-width:820px){.nav ul{display:none}.nav .menu{display:block}}
+.toc-row{display:grid;grid-template-columns:90px 1fr auto;gap:1rem;align-items:baseline;padding:1rem 1.4rem;border-top:1px solid var(--rule)}
+.toc-row h3{font-family:var(--font-serif);font-weight:500;font-size:var(--step-2);line-height:1.1}
+.toc-row h3 i{font-weight:500}
+@media (max-width:600px){.toc-row{grid-template-columns:1fr}.toc-row .label:last-child{display:none}}
+.cards{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--space-m);align-items:start}
+.c-sleeve{grid-column:span 4;background:var(--ink);color:var(--cream);aspect-ratio:1;padding:1.2rem;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.c-sleeve::before{content:"";position:absolute;right:-30%;top:12%;width:85%;aspect-ratio:1;border-radius:50%;background:var(--gold);opacity:.9}
+.c-sleeve::after{content:"";position:absolute;inset:0;background:var(--tex-grain);background-size:200px;opacity:.6}
+.c-sleeve>*{position:relative;z-index:1}
+.c-sleeve h3{font-family:var(--font-serif);font-weight:500;font-size:var(--step-3);line-height:.95;max-width:8ch}
+.c-post{grid-column:span 4;background:var(--tex-paper);background-size:400px;padding:.8rem .8rem 1.2rem;transform:rotate(-2deg);margin-top:2rem;box-shadow:0 1px 0 var(--rule)}
+.c-post .ph{aspect-ratio:3/2;background:var(--tex-concrete) center/400px}
+.c-post h3{font-family:var(--font-serif);font-weight:600;font-size:var(--step-2);margin-top:.6rem;line-height:1}
+.c-card{grid-column:span 4;background:var(--tex-paper);background-size:400px;padding:1.2rem;margin-top:5rem;transform:rotate(1.5deg);border-top:3px solid var(--gold);background-image:var(--tex-paper),repeating-linear-gradient(transparent 0 27px,rgba(120,107,93,.18) 27px 28px)}
+.c-card h3{font-family:var(--font-serif);font-weight:500;font-size:var(--step-2);line-height:1.05;margin:.5rem 0}
+.status{display:inline-block;border:1px solid var(--ink);padding:.05rem .45rem}
+@media (max-width:820px){.c-sleeve,.c-post,.c-card{grid-column:span 12;margin-top:0;transform:none}.c-post{transform:rotate(-1.5deg)}}
+.ticket-wrap{display:grid;place-items:center;padding:var(--space-xl) 1rem;background:var(--tex-plaster-cream);background-size:600px}
+.ticket{display:inline-flex;align-items:center;gap:.9rem;background:var(--ink);color:var(--cream);text-decoration:none;padding:1rem 1.4rem 1rem 1.6rem;transform:rotate(-3deg);font-family:var(--font-label);font-weight:600;letter-spacing:.3em;font-size:var(--step-1);position:relative;transition:transform var(--dur-base) var(--ease-out);min-height:44px;
+  clip-path:polygon(0 4%,3% 0,97% 2%,100% 0,99% 50%,100% 100%,60% 97%,2% 100%,0 96%,1% 50%)}
+.ticket::after{content:"";position:absolute;left:1.6rem;right:3.6rem;bottom:.55rem;height:6px;background:url(graphics/underline-gold.svg) left/100% 100% no-repeat;clip-path:inset(0 100% 0 0);transition:clip-path var(--dur-slow) var(--ease-ink)}
+.ticket svg{width:28px;transition:transform var(--dur-base) var(--ease-out)}
+.ticket:hover,.ticket:focus-visible{transform:rotate(0) translateY(-3px)}
+.ticket:hover::after,.ticket:focus-visible::after{clip-path:inset(0 0 0 0)}
+.ticket:hover svg,.ticket:focus-visible svg{transform:translateX(5px)}
+
+footer{padding:var(--space-xl) 0}
+.files{font-family:ui-monospace,Menlo,monospace;font-size:.85rem;white-space:pre;overflow-x:auto;background:var(--ink-soft);color:var(--cream);padding:1.4rem;line-height:1.55}
+</style>
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="cover">
+  <div class="top"><span class="label">The Maaru Collective</span><span class="label muted">Brand guidelines — v1 — XI.MMXXVI</span></div>
+  <div class="scrap" aria-hidden="true"><span class="label">Frame 07 — placeholder</span></div>
+  <img class="word" src="logo/maaru-wordmark-ink.svg" alt="maaru.">
+  <img class="stamp" src="stamp/maaru-stamp-gold.svg" alt="" aria-hidden="true">
+  <div class="tagline"><em>There’s life in<br>the mundane.</em><img src="graphics/underline-gold.svg" alt="" aria-hidden="true"></div>
+  <span class="side label">Ideas, images, sounds and everything else</span>
+  <div class="bottom"><span class="label">maaru.me</span><span class="label muted">A creative collective of one</span></div>
+</header>
+
+<!-- 01 LOGO -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">01</span><div><h2>The <i>wordmark</i></h2><p>A bold, rounded, lowercase <b>maaru.</b> with an antique-gold full stop. It's a sister to “captured.”: the same family, rounder and heavier. It's the one soft thing in a raw, editorial world, and that contrast is the identity.</p></div></div>
+    <div class="grid g2">
+      <div class="tile t-cream" style="min-height:300px"><img src="logo/maaru-wordmark-ink.svg" alt="maaru. on cream" style="width:80%"><span class="label muted">Primary — ink on cream</span></div>
+      <div class="tile t-ink" style="min-height:300px"><img src="logo/maaru-wordmark-cream.svg" alt="maaru. on ink" style="width:80%"><span class="label" style="color:var(--beige)">Reverse — cream on ink</span></div>
+      <div class="tile t-beige"><img src="logo/maaru-wordmark-ink.svg" alt="maaru. on beige" style="width:70%"><span class="label">On warm beige</span></div>
+      <div class="tile t-paper"><img src="logo/maaru-wordmark-ink-mono.svg" alt="maaru. one colour" style="width:70%"><span class="label">One colour — only when forced</span></div>
+    </div>
+    <div class="grid g2" style="margin-top:var(--space-xl)">
+      <div>
+        <p class="label" style="margin-bottom:.6rem">Do</p>
+        <ul class="clean">
+          <li>Always use the SVG file. Never type “maaru.” in Nunito to fake it.</li>
+          <li>Keep the dot gold, on both ink and cream.</li>
+          <li>Leave clear space of at least one “a” height all round.</li>
+          <li>Below 72px wide, switch to the <b>m.</b> monogram.</li>
+        </ul>
+      </div>
+      <div>
+        <p class="label" style="margin-bottom:.6rem">Don’t</p>
+        <ul class="clean">
+          <li>Stretch, outline, shadow, gradient or rotate it.</li>
+          <li>Turn the letters gold. Gold belongs to the dot.</li>
+          <li>Place it on concrete or a busy photo without a calm patch.</li>
+          <li>Round off the rest of the UI to match. The roundness stays in the logo.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<img class="torn" src="graphics/torn-edge-ink.svg" alt="" aria-hidden="true">
+
+<!-- 02 LOCKUPS -->
+<section class="on-ink" style="margin-top:-2px">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">02</span><div><h2>Lockups, <i>monogram</i>, stamp</h2><p>Use the stacked lockup for footers and the About page, the horizontal one for wide bars, the m. for favicons and tight spaces, and the stamp for paste-up moments. Tilt the stamp; never tilt the rest.</p></div></div>
+    <div class="grid g2">
+      <div class="tile" style="background:var(--ink-soft);min-height:300px"><img src="logo/maaru-collective-stacked-cream.svg" alt="maaru. The Maaru Collective, stacked" style="width:78%"><span class="label" style="color:var(--beige)">Stacked</span></div>
+      <div class="tile t-cream" style="min-height:300px;color:var(--ink)"><img src="logo/maaru-collective-horizontal-ink.svg" alt="maaru. The Maaru Collective, horizontal" style="width:88%"><span class="label muted">Horizontal</span></div>
+    </div>
+    <div class="grid g3" style="margin-top:var(--space-m)">
+      <div class="tile" style="background:var(--ink-soft)"><img src="logo/maaru-monogram-cream.svg" alt="m. monogram" style="width:40%"><span class="label" style="color:var(--beige)">Monogram</span></div>
+      <div class="tile t-cream" style="gap:1rem;grid-auto-flow:column"><img src="favicon/favicon.svg" alt="Favicon, dark" style="width:96px"><img src="favicon/favicon-light.svg" alt="Favicon, light" style="width:64px"><img src="favicon/favicon.svg" alt="" style="width:32px"><img src="favicon/favicon.svg" alt="" style="width:16px"><span class="label muted">Favicon 96 / 64 / 32 / 16</span></div>
+      <div class="tile t-cream"><img src="stamp/maaru-stamp-ink.svg" alt="The Maaru Collective stamp" style="width:62%;transform:rotate(-6deg)"><span class="label muted">Stamp</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 COLOUR -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">03</span><div><h2>Colour, <i>weathered</i></h2><p>Cream is the ground and ink is the voice. Beige and stone layer between them. Gold is aged ink: a dot, a rule, a mark, a hover. If a screen looks gold, there’s too much of it.</p></div></div>
+    <div class="grid g3">
+      <div class="sw" style="background:var(--cream);outline:1px solid var(--rule)"><span class="label">Plaster Cream — ground</span><div><b>Cream</b><br><code>#E9DFD0</code></div><div class="ratio"><span>Ink 13.7</span></div></div>
+      <div class="sw" style="background:var(--ink);color:var(--cream)"><span class="label">Ink Black — type</span><div><b>Ink</b><br><code>#171614</code></div><div class="ratio"><span>Cream 13.7</span><span>Gold 5.5</span></div></div>
+      <div class="sw" style="background:var(--beige)"><span class="label">Warm Beige — layers</span><div><b>Beige</b><br><code>#C7B49D</code></div><div class="ratio"><span>Ink 9.0</span></div></div>
+      <div class="sw" style="background:var(--gold);color:var(--ink)"><span class="label">Antique Gold — accent only</span><div><b>Gold</b><br><code>#A88955</code></div><div class="ratio"><span>Text on cream: use #6E5A38</span></div></div>
+      <div class="sw" style="background:var(--stone);color:var(--cream)"><span class="label">Weathered Stone — secondary</span><div><b>Stone</b><br><code>#786B5D</code></div><div class="ratio"><span>Small text on cream: use #665A4E</span></div></div>
+      <div class="sw" style="background:var(--tex-plaster-cream);background-size:500px"><span class="label">Rough guide to proportion</span>
+        <div style="display:flex;height:46px;margin-top:auto"><i style="flex:58;background:var(--cream);outline:1px solid var(--rule)"></i><i style="flex:22;background:var(--ink)"></i><i style="flex:10;background:var(--beige)"></i><i style="flex:7;background:var(--stone)"></i><i style="flex:3;background:var(--gold)"></i></div>
+        <span class="label muted" style="margin-top:.5rem">58 / 22 / 10 / 7 / 3</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 TYPE -->
+<section class="on-beige">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">04</span><div><h2>Three voices, <i>one page</i></h2><p>The serif speaks, the sans explains, and the condensed type labels things. Play with scale and position, but keep body copy plain and readable.</p></div></div>
+    <div class="spec"><div><p class="label">Cormorant Garamond</p><p class="muted">500 / 600 + italics. Headlines, statements, pull quotes, big numerals.</p></div>
+      <p class="big-serif">The bus stop <i>at 7:40</i>, again.</p></div>
+    <div class="spec"><div><p class="label">Nunito Sans</p><p class="muted">300–700. Body, navigation, captions. Same family as “captured.”</p></div>
+      <p class="sans">The light hits the shutters on Station Road for about four minutes a day. I’ve started timing my walk around it. Nothing happens, and that’s the point.</p></div>
+    <div class="spec"><div><p class="label">Barlow Condensed</p><p class="muted">500 / 600, uppercase, tracked 0.22em. Dates, numbering, labels, coordinates.</p></div>
+      <p class="cond">N° 014 — Journal — Note<br>12.11.26 — 51.5806° N, 0.3420° W<br>MRU-007 — Side A</p></div>
+  </div>
+</section>
+
+<!-- 05 TEXTURE -->
+<section>
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">05</span><div><h2>Surfaces &amp; <i>marks</i></h2><p>Walls, paper and grain sit behind things. Hand-drawn marks point at things. Use both at low volume, and always keep text on a calm surface.</p></div></div>
+    <div class="grid g3">
+      <div class="tex" style="background-image:var(--tex-plaster-cream)"><span class="label">plaster-cream</span></div>
+      <div class="tex" style="background-image:var(--tex-plaster-beige)"><span class="label">plaster-beige</span></div>
+      <div class="tex" style="background-image:var(--tex-concrete)"><span class="label">concrete-stone</span></div>
+      <div class="tex" style="background-image:var(--tex-wall-ink)"><span class="label">wall-ink</span></div>
+      <div class="tex" style="background-image:var(--tex-paper);background-size:300px"><span class="label">paper-cream</span></div>
+      <div class="tex" style="background:var(--tex-photocopy),var(--tex-grain),var(--cream);background-size:300px,200px"><span class="label">photocopy + grain overlays</span></div>
+    </div>
+    <div class="grid g3 marks" style="margin-top:var(--space-m)">
+      <div class="tile t-cream"><img src="graphics/underline-gold.svg" alt="" style="width:80%"><span class="label muted">underline-gold</span></div>
+      <div class="tile t-cream"><img src="graphics/brush-swipe-gold.svg" alt="" style="width:85%"><span class="label muted">brush-swipe-gold</span></div>
+      <div class="tile t-cream"><img src="graphics/circle-gold.svg" alt="" style="width:46%"><span class="label muted">circle-gold</span></div>
+      <div class="tile t-cream"><img src="graphics/arrow-ink.svg" alt="" style="width:46%"><span class="label muted">arrow-ink</span></div>
+      <div class="tile t-cream"><img src="graphics/scribble-ink.svg" alt="" style="width:46%"><span class="label muted">scribble-ink</span></div>
+      <div class="tile t-cream" style="padding:0;place-items:end stretch"><img src="graphics/torn-edge-ink.svg" alt="" style="width:100%;height:50px"><span class="label muted" style="bottom:auto;top:.5rem">torn-edge (cream / beige / ink)</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 IN USE -->
+<section class="on-beige">
+  <div class="wrap">
+    <div class="sec-head"><span class="sec-num">06</span><div><h2>In <i>use</i></h2><p>A few sketches for Claude Code to start from. Each section gets its own format, all using the same tokens.</p></div></div>
+
+    <div class="mock">
+      <div class="nav"><img src="logo/maaru-wordmark-ink.svg" alt="maaru."><ul class="label"><li class="active">Journal</li><li>Visuals</li><li>Frequencies</li><li>Elsewhere</li><li>Experiments</li><li>Everything</li><li>About</li></ul><span class="label menu">Menu</span></div>
+      <div class="toc-row"><span class="label muted">12.11.26</span><h3>Four minutes of light on <i>Station Road</i></h3><span class="label muted">Note — 1 min</span></div>
+      <div class="toc-row"><span class="label muted">03.11.26</span><h3>What the <i>tailor</i> in Bhuj kept on his wall</h3><span class="label muted">Essay — 7 min</span></div>
+      <div class="toc-row"><span class="label muted">27.10.26</span><h3>Every building I photograph is <i>about to change</i></h3><span class="label muted">Observation — 4 min</span></div>
+    </div>
+
+    <div class="cards" style="margin-top:var(--space-xl)">
+      <div class="c-sleeve"><span class="label" style="color:var(--beige)">Frequencies — MRU-007</span><h3>Sunday, <i>late</i></h3><span class="label">Side A — 6 tracks</span></div>
+      <div class="c-post"><div class="ph" role="img" aria-label="Placeholder photo"></div><h3>Nairobi</h3><p class="label muted">Elsewhere — 1.2921° S, 36.8219° E — 08.26</p></div>
+      <div class="c-card"><span class="label status">In progress</span> <span class="label muted">v0.3</span><h3>A zine made only from receipts</h3><p class="muted" style="font-size:var(--step--1)">Started 09.26 — last touched 3 days ago</p></div>
+    </div>
+
+    <div class="ticket-wrap" style="margin-top:var(--space-xl)">
+      <a class="ticket" href="#top">GO TO HOME
+        <svg viewBox="0 0 40 20" aria-hidden="true"><path d="M2 11 C 12 10, 24 9, 34 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/><path d="M27 3 C 31 6, 34 8, 37 10 C 34 12, 31 15, 28 18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg></a>
+      <p class="label muted" style="margin-top:1.4rem">Landing-page button — hover or focus it</p>
+    </div>
+  </div>
+</section>
+
+<img class="torn" src="graphics/torn-edge-ink.svg" alt="" aria-hidden="true" style="background:var(--tex-plaster-beige);background-size:700px">
+<footer class="on-ink" style="margin-top:-2px">
+  <div class="wrap grid g2" style="align-items:end">
+    <img src="logo/maaru-collective-stacked-cream.svg" alt="maaru. The Maaru Collective" style="width:min(420px,90%)">
+    <div style="text-align:right"><img src="stamp/maaru-stamp-gold.svg" alt="" style="width:110px;margin-left:auto;transform:rotate(8deg)"><p class="label" style="margin-top:1rem;color:var(--beige)">maaru.me — Hand to Claude Code with CLAUDE_CODE_BRIEF.md</p></div>
+  </div>
+</footer>
+</body>
+</html>

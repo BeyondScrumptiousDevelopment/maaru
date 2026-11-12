@@ -1,0 +1,24 @@
+---
+/** Video: YouTube/Vimeo via a click-to-load facade; anything else as a native <video>. Never autoplays with sound. */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Embed from './Embed.astro';
+import { youtubeId, vimeoId } from '../lib/embeds';
+interface Props { url: string; poster?: ImageMetadata; caption?: string; title: string; class?: string }
+const { url, poster, caption, title, class: cls = '' } = Astro.props;
+const provider = youtubeId(url) ? 'youtube' : vimeoId(url) ? 'vimeo' : undefined;
+const posterUrl = poster ? (await getImage({ src: poster, width: 1600, format: 'webp' })).src : undefined;
+---
+<figure class:list={['video', cls]}>
+  {provider ? (
+    <div class="video__frame" style={posterUrl ? `background-image:url(${posterUrl})` : undefined}>
+      <Embed provider={provider} url={url} title={title} />
+    </div>
+  ) : (
+    <video class="video__native" controls preload="none" playsinline poster={posterUrl} width={poster?.width} height={poster?.height}>
+      <source src={url} />
+      <a href={url}>Download the video</a>
+    </video>
+  )}
+  {caption && <figcaption class="label">{caption}</figcaption>}
+</figure>

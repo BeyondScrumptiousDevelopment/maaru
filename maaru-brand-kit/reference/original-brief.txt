@@ -1,0 +1,893 @@
+MAARU — COMPLETE BRAND IDENTITY, WEBSITE DESIGN & DEVELOPMENT BRIEF
+
+Project: MAARU
+Full identity: The Maaru Collective
+Domain: maaru.me
+Tagline: There’s life in the mundane.
+Descriptor: A creative collective of one.
+Hosting: Cloudflare Pages
+
+You are acting as my creative director, brand designer, editorial designer, UX/UI designer and experienced full-stack front-end developer.
+
+I want you to create a complete, original and fully functional website for MAARU.
+
+This is not a conventional portfolio, business website or blog.
+
+It is a personal creative collective, archive and playground — a place where I can collect and share ideas, photography, writing, music, travel, projects, observations and anything else that interests me.
+
+The website should have a strong visual identity, a distinctive editorial aesthetic and a flexible structure that can evolve over time.
+
+Important: Build the entire website, but make the initial landing page a separate creative experience with a GO TO HOME button.
+
+I want to experiment with that landing page before deciding whether it becomes the permanent homepage.
+
+⸻
+
+PART 1 — THE BRAND
+
+1. What is MAARU?
+
+MAARU is my own creative corner of the internet.
+
+Think of it as a personal creative collective, archive and playground.
+
+It is somewhere I can freely share, explore and collect:
+
+* Photography and videos
+* Travel experiences and observations
+* Random thoughts and writing
+* Creative ideas and experiments
+* Music, playlists and sounds
+* Design inspiration
+* Things I’ve made
+* Places I’ve visited
+* Interesting things I’ve discovered
+* Unfinished projects and spontaneous ideas
+* Everyday moments that might otherwise go unnoticed
+
+There is no fixed niche, audience or commercial purpose.
+
+I want the freedom to publish whatever interests me, without everything needing to be polished, categorised or connected.
+
+The concept is essentially a creative collective of one.
+
+MAARU does not need to explain itself. It is simply a place where different interests, experiences, ideas and creative expressions can coexist.
+
+2. Personal influences
+
+My interests and influences include:
+
+* Harrow
+* Kutchh
+* Nairobi
+* Indian and Kenyan heritage
+* Travel and discovering new places
+* Photography and visual storytelling
+* House music and underground music culture
+* Art, design and architecture
+* Creative entrepreneurship and experimentation
+* Everyday observations
+
+These influences should naturally appear throughout the content and visual identity.
+
+Do not make the website exclusively about heritage, travel, photography or any single subject.
+
+The overall feeling should be worldly, mixed, individual and unconventional.
+
+3. Brand personality
+
+MAARU should feel:
+
+* Artistic and unconventional
+* Editorial and expressive
+* Worldly and eclectic
+* Personal but not overly autobiographical
+* Creative and experimental
+* Warm, tactile and imperfect
+* Contemporary, with an independent cultural feel
+
+Think independent art publications, underground music culture, travel journals, photography archives, old magazines, gallery walls and collected ephemera.
+
+It should NOT feel like:
+
+* A corporate creative agency
+* A luxury lifestyle brand
+* A conventional personal portfolio
+* An influencer website
+* A travel blog
+* A generic minimalist website
+* A polished startup identity
+
+Avoid making everything look perfectly aligned, symmetrical or overly coordinated.
+
+The brand should have character.
+
+⸻
+
+PART 2 — VISUAL IDENTITY
+
+4. Overall creative direction
+
+RAW EDITORIAL MEETS CONTEMPORARY CULTURE.
+
+The identity should combine:
+
+* Editorial typography
+* Warm neutral colours
+* Rough architectural textures
+* Imperfect graphic details
+* Layered imagery
+* Collage and mixed-media influences
+* Contemporary creative layouts
+
+The design should feel collected rather than manufactured.
+
+I want the visual identity to have a tactile quality, as though elements have been gathered from different places, magazines, photographs, records and creative experiments.
+
+It should feel deliberately art-directed, but never overly polished.
+
+5. Colour palette
+
+The selected palette is:
+
+Colour	Hex	Usage
+Ink Black	#171614	Main typography and contrast
+Warm Beige	#C7B49D	Supporting backgrounds
+Plaster Cream	#E9DFD0	Main background
+Antique Gold	#A88955	Accent details
+Weathered Stone	#786B5D	Secondary tones
+
+Beige, cream, black and antique gold should dominate.
+
+Gold should feel like aged metallic ink, gold leaf or imperfect paint rather than shiny digital gold.
+
+Avoid bright yellow gold, gradients and glossy effects.
+
+The palette should feel earthy, warm and slightly weathered.
+
+Black typography against textured beige and cream should be a recurring visual feature.
+
+6. Main wordmark — MAARU.
+
+The primary wordmark should be handwritten.
+
+Selected direction: A loose artistic signature with a little influence from bold brush script.
+
+This is one of the most important elements of the identity.
+
+It should feel:
+
+* Personal
+* Fluid
+* Expressive
+* Slightly imperfect
+* Organic
+* Confident
+* Distinctive
+
+The lettering should look like a real handwritten signature, not a generic wedding invitation font.
+
+The strokes should have natural variations in weight and movement.
+
+A slightly rough, dry-brush quality is welcome, but the lettering must remain legible.
+
+Avoid overly delicate formal calligraphy.
+
+The wordmark should become recognisable enough to work independently without the full name.
+
+Develop a proper logo asset, ideally as SVG or a high-resolution transparent image, rather than relying on an ordinary system font.
+
+Create:
+
+1. Primary handwritten MAARU. wordmark.
+2. Secondary THE MAARU COLLECTIVE lockup.
+3. Compact monogram or symbol.
+4. Small favicon for maaru.me.
+5. Stamp-style graphic for use throughout the website.
+
+7. Secondary typography
+
+Use three complementary typographic styles.
+
+Editorial serif
+
+For large headlines, editorial statements, feature titles and section introductions.
+
+Explore:
+
+* Cormorant Garamond
+* Bodoni Moda
+* Similar expressive editorial serif typefaces.
+
+Contemporary sans-serif
+
+For navigation, body text, captions, dates and metadata.
+
+Explore:
+
+* Space Grotesk
+* Helvetica Neue
+* Similar contemporary typefaces.
+
+Condensed typography
+
+For occasional uppercase labels, small graphic annotations, dates and numbering.
+
+Use typography creatively.
+
+Play with scale, spacing, alignment and unexpected positioning.
+
+The handwritten wordmark should remain the hero.
+
+8. Textures and graphic language
+
+The website should feel tactile and layered.
+
+Explore:
+
+* Rough plaster walls
+* Weathered architectural surfaces
+* Exposed concrete
+* Cracked paint
+* Torn paper edges
+* Photocopier grain
+* Film grain
+* Paper textures
+* Brush strokes
+* Imperfect gold marks
+* Handwritten annotations
+* Stamps and ink marks
+* Layered photography
+* Organic lines and abstract shapes
+* Distressed printed textures
+
+Use textures as backgrounds, overlays, section dividers and small graphic details.
+
+Don’t overuse them. They should add character without making the website difficult to read.
+
+The design should have visual tension, negative space and asymmetry.
+
+Avoid repetitive decorative elements.
+
+9. Photography and art direction
+
+The imagery should feel candid, atmospheric and documentary-led.
+
+Potential subjects:
+
+* Architecture and interesting buildings
+* Streets and neighbourhoods
+* Travel photography
+* Everyday moments
+* People and places
+* Food and creative projects
+* Music, records and nightlife
+* Shadows, textures and details
+* Landscapes and urban environments
+* Objects and things that catch my attention
+
+Use a mixture of:
+
+* Black-and-white photography
+* Warm-toned colour photography
+* Film-inspired imagery
+* Cropped compositions
+* Full-bleed photographs
+* Layered image treatments
+
+Avoid generic stock photography and stereotypical cultural imagery.
+
+Use considered placeholder imagery during development, but organise all assets so that I can replace them easily with my own photographs and videos.
+
+⸻
+
+PART 3 — WEBSITE EXPERIENCE
+
+10. Two-layer homepage concept
+
+This is a key requirement.
+
+I want the website to have two distinct experiences.
+
+EXPERIENCE ONE — THE CREATIVE LANDING PAGE
+
+Route: /
+
+This is the first page visitors see when they visit maaru.me.
+
+It should be a standalone, visually expressive introduction to MAARU.
+
+This page is deliberately experimental.
+
+I may keep it permanently, redesign it later or eventually replace it with the main website homepage.
+
+For now, treat it as a creative opening sequence.
+
+It should feel like entering an independent creative publication or discovering an interesting corner of the internet.
+
+Landing page design
+
+Experiment with:
+
+* Oversized handwritten MAARU wordmark.
+* Rough plaster and weathered wall textures.
+* Large editorial typography.
+* Beige, black, cream and antique gold.
+* Torn-paper compositions.
+* Overlapping imagery.
+* Film photography.
+* Imperfect brush marks.
+* Unexpected spacing and positioning.
+* Small editorial annotations.
+* Subtle movement and animation.
+
+Do not make it look like a standard website hero section.
+
+Do not simply centre the logo and place a button underneath it.
+
+Make the composition visually interesting and memorable.
+
+Landing page copy
+
+Main wordmark:
+
+MAARU.
+
+Supporting copy:
+
+“There’s life in the mundane.”
+
+Optional descriptor:
+
+“THE MAARU COLLECTIVE”
+
+Additional supporting line:
+
+“Ideas, images, sounds and everything else.”
+
+Main CTA
+
+Include a prominent but aesthetically integrated button:
+
+GO TO HOME
+
+This button must navigate to /home.
+
+It should feel like an invitation to enter the MAARU world.
+
+The button should have a considered hover interaction and work properly on desktop and mobile.
+
+Do not use a generic oversized SaaS-style button.
+
+Important
+
+The landing page should not be confused with the actual main website homepage.
+
+It is a separate introductory experience.
+
+Keep its design and content independent so I can later change or remove it without affecting the rest of the website.
+
+⸻
+
+EXPERIENCE TWO — THE MAIN MAARU WEBSITE
+
+Route: /home
+
+This is the actual main website.
+
+It should be a fully developed and functional creative archive.
+
+The landing page’s GO TO HOME button takes visitors here.
+
+This page should introduce the main collection and provide access to the entire website.
+
+It should include:
+
+* Main MAARU identity and navigation.
+* An editorial introduction.
+* Recent content and featured pieces.
+* Visual entry points to the different sections.
+* A loose, exploratory layout.
+* Access to the complete archive.
+* Footer and supporting navigation.
+
+The main homepage should feel like an ongoing creative journal, not a corporate homepage.
+
+⸻
+
+PART 4 — BUILD THE ENTIRE WEBSITE
+
+11. Website routes
+
+Build all of the following pages as real pages, not empty placeholders.
+
+Page	Route	Purpose
+Creative landing page	/	Introductory creative experience
+Main home	/home	Main MAARU homepage
+Journal	/journal	Writing, observations and thoughts
+Journal post	/journal/[slug]	Individual written entries
+Visuals	/visuals	Photography, videos and imagery
+Visual collection	/visuals/[slug]	Individual visual collections
+Frequencies	/frequencies	Music, playlists and sounds
+Elsewhere	/elsewhere	Travel, places and experiences
+Location entry	/elsewhere/[slug]	Individual place entries
+Experiments	/experiments	Creative projects and unfinished ideas
+Experiment entry	/experiments/[slug]	Individual creative projects
+Everything	/everything	Complete chronological archive
+About	/about	Minimal introduction to MAARU
+
+Build all the routes and their page layouts.
+
+Each section should have its own identity while sharing the same underlying MAARU design language.
+
+Do not make every page identical.
+
+12. Main navigation
+
+Create a consistent navigation system.
+
+Potential navigation:
+
+* MAARU.
+* JOURNAL
+* VISUALS
+* FREQUENCIES
+* ELSEWHERE
+* EXPERIMENTS
+* EVERYTHING
+* ABOUT
+
+The MAARU logo should link back to /home.
+
+The navigation must:
+
+* Work across all pages.
+* Be responsive.
+* Have a considered mobile menu.
+* Clearly indicate the active section.
+* Use appropriate hover states.
+* Avoid clutter.
+
+The introductory landing page can have a much simpler layout.
+
+13. Journal
+
+The Journal should support:
+
+* Short thoughts and notes.
+* Longer written pieces.
+* Personal observations.
+* Ideas.
+* Reflections.
+* Stories and experiences.
+
+Create an editorial listing page and individual post pages.
+
+Use expressive headlines, dates, reading time where appropriate and a clear reading layout.
+
+Avoid conventional blog card designs.
+
+14. Visuals
+
+The Visuals section should be image-led.
+
+It should support:
+
+* Photography.
+* Video.
+* Image galleries.
+* Visual experiments.
+* Photo collections.
+* Mixed-media projects.
+
+Experiment with asymmetric grids, masonry-style layouts and editorial image arrangements.
+
+Individual collections should have dedicated pages.
+
+Include image viewing and gallery interactions where appropriate.
+
+15. Frequencies
+
+This section is for music and sound.
+
+It should support:
+
+* Playlists.
+* Music discoveries.
+* Listening notes.
+* Album and track references.
+* Music-related writing.
+* Embedded external music links where available.
+
+Do not attempt to stream copyrighted music directly.
+
+Use legitimate external embeds or links where appropriate.
+
+Make the visual direction feel influenced by independent record labels, record sleeves and underground music culture.
+
+16. Elsewhere
+
+This section is for places and experiences.
+
+It can include:
+
+* Travel notes.
+* City observations.
+* Photographs.
+* Places worth remembering.
+* Short travel diaries.
+* Location-based collections.
+
+Do not turn it into a conventional travel blog.
+
+The focus is on documenting places and experiences in a personal, visual way.
+
+17. Experiments
+
+This is the creative playground.
+
+It should accommodate:
+
+* Design experiments.
+* Creative concepts.
+* Ideas in progress.
+* Personal projects.
+* Things made.
+* Unfinished work.
+* Unexpected creative explorations.
+
+It should be flexible enough to accommodate different types of content.
+
+18. Everything
+
+Create a unified archive that brings all published content together.
+
+It should display entries chronologically.
+
+Allow visitors to explore by:
+
+* Content type.
+* Optional tags.
+* Date.
+* Search.
+
+Do not require every item to belong to a fixed category.
+
+The Everything page should feel like browsing through a collection rather than navigating a database.
+
+19. About
+
+Keep the About page personal and understated.
+
+Introduce MAARU as:
+
+“A creative collective of one. An ever-growing collection of ideas, images, sounds, places and everything else.”
+
+Do not make it sound like a business or agency.
+
+The page should be minimal and editorial.
+
+⸻
+
+PART 5 — CONTENT MANAGEMENT & FUNCTIONALITY
+
+20. Build the content architecture
+
+I want the complete website built in a way that allows me to publish content in the future.
+
+I do not want to have to redesign or rebuild the website just to add a new photograph, thought or project.
+
+Use a flexible content architecture.
+
+A content item should support:
+
+* Unique ID.
+* Title.
+* Slug.
+* Publication date.
+* Content type.
+* Short description.
+* Main image.
+* Additional images.
+* Video URL or video asset.
+* Body content.
+* Optional tags.
+* Optional location.
+* Featured status.
+* Draft or published status.
+* Optional external links.
+
+Not every field needs to be populated.
+
+Different content types should support different layouts.
+
+For example:
+
+* A short thought should not require a large hero image.
+* A photography collection should prioritise images.
+* A music entry should allow links and playlist embeds.
+* A travel entry should support location and photographs.
+* An experiment should allow a flexible mix of text and media.
+
+21. Content management approach
+
+Build the website so that content can eventually be managed through a simple CMS or content administration interface.
+
+For the initial version:
+
+* Use an organised content model.
+* Provide sample content.
+* Make content easy to update.
+* Keep the content separate from the presentation layer.
+* Avoid hardcoding every content item directly into page components.
+
+Recommend an appropriate future CMS that is compatible with the Cloudflare-hosted website, but do not introduce paid services without discussing them.
+
+If a simple local content approach is sufficient initially, use it.
+
+I want the architecture to be ready for a CMS integration later.
+
+Do not build a complicated authentication system or database unnecessarily.
+
+22. Search and filtering
+
+Build useful browsing functionality.
+
+The Everything archive should support:
+
+* Search by title and text.
+* Filtering by content type.
+* Optional tag filtering.
+* Chronological sorting.
+
+Keep the experience lightweight and intuitive.
+
+⸻
+
+PART 6 — USER EXPERIENCE & INTERACTIONS
+
+23. Animation
+
+Explore:
+
+* Handwritten logo reveal.
+* Gentle image transitions.
+* Hover effects on typography.
+* Moving graphic elements.
+* Subtle parallax.
+* Grain and texture overlays.
+* Animated underline or brushstroke details.
+* Smooth scrolling where appropriate.
+* Small unexpected interactive details.
+
+Do not over-animate the website.
+
+It should feel responsive and alive, not like a flashy agency website.
+
+Respect reduced-motion preferences.
+
+24. Mobile experience
+
+The mobile experience is essential.
+
+Do not simply shrink the desktop design.
+
+Reconsider the compositions for mobile:
+
+* Keep the wordmark prominent.
+* Preserve the editorial feel.
+* Allow typography to wrap naturally.
+* Use image crops thoughtfully.
+* Maintain readable text.
+* Keep navigation simple.
+* Avoid unnecessary horizontal scrolling.
+* Ensure all interactions work with touch.
+
+Both the creative landing page and the main website must be properly designed for mobile.
+
+⸻
+
+PART 7 — TECHNICAL DEVELOPMENT
+
+25. Technology
+
+The website will be hosted on Cloudflare Pages.
+
+Prefer:
+
+* Astro for the main framework.
+* TypeScript where useful.
+* CSS variables for design tokens.
+* Reusable components.
+* Lightweight JavaScript for interactions.
+* Local assets where practical.
+* A sensible content structure.
+
+If you recommend a different framework, explain why before committing.
+
+The implementation must be compatible with Cloudflare Pages.
+
+Avoid unnecessary paid services and subscriptions.
+
+26. Project organisation
+
+Create a clean and scalable project structure.
+
+Organise:
+
+* Pages and routes.
+* Shared layouts.
+* Components.
+* Global styles.
+* Design tokens.
+* Typography and fonts.
+* Images and media.
+* Textures and graphics.
+* Content data.
+* Utility functions.
+* Configuration files.
+
+The landing page should have its own independent components and styles.
+
+It must be possible to redesign the landing page without affecting the main website.
+
+27. Cloudflare deployment
+
+Prepare the project for deployment using Cloudflare Pages and Git integration.
+
+Provide:
+
+* Correct build configuration.
+* Correct output directory.
+* Environment variable guidance if required.
+* Deployment instructions.
+* Local development instructions.
+* Production build verification.
+
+Do not assume deployment has succeeded without actually testing it.
+
+28. SEO and accessibility
+
+Include:
+
+* Appropriate page titles.
+* Meta descriptions.
+* Open Graph metadata.
+* Favicon.
+* Semantic HTML.
+* Accessible navigation.
+* Image alt text.
+* Keyboard navigation.
+* Readable contrast.
+* Reduced-motion support.
+
+Keep SEO natural and do not make the website sound commercial.
+
+⸻
+
+PART 8 — DESIGN CONSTRAINTS
+
+29. What to avoid
+
+Please avoid:
+
+* Generic website templates.
+* Standard SaaS layouts.
+* Corporate branding.
+* Luxury hotel or lifestyle aesthetics.
+* Excessive rounded cards.
+* Gradient-heavy backgrounds.
+* Stock-looking illustrations.
+* Repetitive grid layouts.
+* Overly polished compositions.
+* Unnecessary sections just to fill space.
+* Excessive decorative gold.
+* Generic script fonts.
+* Overly delicate calligraphy.
+* A website that looks like a creative agency.
+
+Do not force every page or section into the same visual structure.
+
+I want the design to have personality.
+
+The landing page should be especially experimental.
+
+The rest of the website should still feel editorial, creative and visually interesting, but usability and browsing should remain intuitive.
+
+⸻
+
+PART 9 — DELIVERABLES
+
+30. What I expect you to build
+
+Build the complete website, including:
+
+1. Creative introductory landing page at /.
+2. Functional GO TO HOME button linking to /home.
+3. Fully developed main homepage at /home.
+4. All section pages.
+5. Individual content page templates.
+6. Shared navigation and footer.
+7. Search and archive functionality.
+8. Content architecture and sample data.
+9. Reusable components.
+10. Full visual identity implementation.
+11. Responsive desktop and mobile layouts.
+12. Typography and local asset organisation.
+13. Cloudflare Pages-compatible configuration.
+14. SEO and accessibility essentials.
+15. README with setup, content editing and deployment instructions.
+
+Do not stop after creating a homepage mockup.
+
+I want an actual working website with real routes and functioning navigation.
+
+Use carefully selected placeholder content so I can see how the site will work before adding my own material.
+
+Do not create fake interactions or non-functional buttons.
+
+31. Development workflow
+
+Work through the following stages:
+
+Stage 1 — Establish the foundation
+
+Set up the framework, project structure, routes, components, typography and design tokens.
+
+Stage 2 — Build the brand
+
+Implement the handwritten MAARU wordmark, supporting typography, colour palette and graphic language.
+
+Stage 3 — Build the creative landing page
+
+Make / an experimental introduction to MAARU, with the GO TO HOME button.
+
+Stage 4 — Build the complete website
+
+Implement /home and all other sections, individual page templates, archive, search and navigation.
+
+Stage 5 — Add content architecture
+
+Organise sample content and make the structure ready for future publishing and CMS integration.
+
+Stage 6 — Refine and test
+
+Test desktop, tablet and mobile layouts, interactions, links, image loading and accessibility.
+
+Stage 7 — Prepare deployment
+
+Run the production build, fix errors and prepare Cloudflare Pages deployment.
+
+Do not claim the website is complete until the production build has been checked.
+
+⸻
+
+FINAL CREATIVE INSTRUCTION
+
+I want you to act as a creative director, editorial designer, UX designer and experienced front-end developer.
+
+Do not treat this as a standard website-building exercise.
+
+Experiment with visual structures, typography, imagery and composition.
+
+The handwritten MAARU wordmark should be the recognisable centre of the identity.
+
+The visual language should be raw, tactile, editorial and unconventional.
+
+The colour palette is warm beige, plaster cream, ink black, antique gold and weathered stone.
+
+The design should feel like an independent creative publication, a personal archive and a visual playground.
+
+The website should have two distinct experiences:
+
+1. An experimental creative landing page that visitors see first, with a GO TO HOME button.
+
+2. A complete, functional MAARU website behind it, with all sections built and ready to use.
+
+The landing page is temporary by design and must be easy to change later.
+
+MAARU is not trying to sell anything.
+
+It is simply a place for ideas to exist.
+
+Make something with character. Something that feels different. Something that feels like MAARU.

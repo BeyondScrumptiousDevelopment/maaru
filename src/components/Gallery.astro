@@ -1,0 +1,20 @@
+---
+/** A single lightbox-enabled image with contact-sheet frame number. */
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Photo from './Photo.astro';
+interface Props { src: ImageMetadata; alt: string; caption?: string; frame?: number; total?: number; group: string; sizes?: string; class?: string; eager?: boolean }
+const { src, alt, caption, frame, total, group, sizes, class: cls = '', eager } = Astro.props;
+const big = await getImage({ src, width: Math.min(2400, src.width), format: 'webp' });
+const n = frame != null ? String(frame).padStart(2, '0') : '';
+---
+<figure class:list={['frame', cls]}>
+  <a href={big.src} data-lightbox={group} data-caption={[n && `${n}${total ? ` / ${String(total).padStart(2, '0')}` : ''}`, caption].filter(Boolean).join(' — ')} data-alt={alt} class="frame__link">
+    <Photo src={src} alt={alt} sizes={sizes} eager={eager} />
+    <span class="visually-hidden">Open larger</span>
+  </a>
+  <figcaption class="frame__cap">
+    {n && <span class="label frame__n">{n}</span>}
+    {caption && <span class="frame__text">{caption}</span>}
+  </figcaption>
+</figure>

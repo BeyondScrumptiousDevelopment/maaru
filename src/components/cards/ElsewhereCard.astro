@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Photo from '../Photo.astro';
+import Stamp from '../Stamp.astro';
+import { coords, range } from '../../lib/dates';
+import { coverOf, urlFor } from '../../lib/entries';
+import { tilt } from '../../lib/text';
+interface Props { entry: CollectionEntry<'elsewhere'>; compact?: boolean; as?: 'h2' | 'h3'; class?: string; style?: string; still?: boolean }
+const { entry, compact = false, as: H = 'h3', class: cls = '', style = '', still = false } = Astro.props;
+const d = entry.data;
+const cover = coverOf(entry);
+const loc = d.location!;
+---
+<article class:list={['card card--postcard', { 'is-compact': compact }, cls]} style={`--tilt:${still ? 0 : tilt(entry.id, 2.5)}deg;${style}`}>
+  {cover && <div class="card__img"><Photo src={cover.src} alt={cover.alt} sizes={compact ? '(min-width: 768px) 25vw, 60vw' : '(min-width: 1024px) 33vw, 90vw'} /></div>}
+  <div class="card__body">
+    <H class="card__title"><a class="card__link" href={urlFor(entry)}>{d.title}</a></H>
+    <p class="label card__meta">{loc.country && `${loc.country} — `}{coords(loc.lat, loc.lng)}</p>
+    <p class="label card__meta"><time datetime={d.date.toISOString()}>{range(d.date, d.dateEnd)}</time></p>
+  </div>
+  {!compact && <Stamp class="card__stamp" rotate={tilt(entry.id + 's', 14)} />}
+</article>

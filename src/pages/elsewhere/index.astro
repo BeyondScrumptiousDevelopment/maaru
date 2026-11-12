@@ -1,0 +1,42 @@
+---
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import ElsewhereCard from '../../components/cards/ElsewhereCard.astro';
+import { getSection, urlFor } from '../../lib/entries';
+import { coords } from '../../lib/dates';
+
+const items = await getSection('elsewhere');
+// typographic "map": places with counts (across every section that has a location)
+const places = new Map<string, { name: string; country?: string; lat?: number; lng?: number; n: number; first: string }>();
+for (const e of items) {
+  const l = e.data.location!;
+  const p = places.get(l.name) ?? { ...l, n: 0, first: urlFor(e) };
+  p.n++;
+  places.set(l.name, p);
+}
+const byYear = Object.entries(Object.groupBy(items, (e) => String(e.data.date.getUTCFullYear()))).sort((a, b) => +b[0] - +a[0]);
+---
+<SiteLayout title="Elsewhere" description="Places, not a travel blog. Postcards and diary fragments from Harrow, Kutchh, Nairobi and wherever else." section="elsewhere">
+  <header class="page-head page-head--elsewhere wrap">
+    <p class="label page-head__n">04 — Elsewhere</p>
+    <h1 class="page-head__title">Places, kept as <i>postcards</i></h1>
+    <p class="page-head__intro">Not a travel blog. Short diaries in dated fragments, a few photographs, and a list of things worth remembering. Home counts as elsewhere if you look at it properly.</p>
+  </header>
+
+  <section class="places wrap" aria-labelledby="places-h">
+    <h2 id="places-h" class="label">Places so far</h2>
+    <ol class="places__list" role="list">
+      {[...places.values()].map((p) => (
+        <li><a href={p.first}><span class="places__name">{p.name}</span><span class="label">{coords(p.lat, p.lng)}</span><span class="label places__n">×{p.n}</span></a></li>
+      ))}
+    </ol>
+  </section>
+
+  {byYear.map(([year, list]) => (
+    <section class="postcards wrap" aria-labelledby={`y-${year}`}>
+      <h2 id={`y-${year}`} class="year-mark">{year}</h2>
+      <ul class="postcards__wall" role="list">
+        {list!.map((e) => <li data-reveal><ElsewhereCard entry={e} as="h3" /></li>)}
+      </ul>
+    </section>
+  ))}
+</SiteLayout>

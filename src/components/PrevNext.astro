@@ -1,0 +1,14 @@
+---
+import { urlFor, SECTION_META, type AnyEntry, type Section } from '../lib/entries';
+interface Props { newer?: AnyEntry; older?: AnyEntry; section: Section }
+const { newer, older, section } = Astro.props;
+---
+<nav class="prevnext wrap" aria-label={`More from ${SECTION_META[section].label}`}>
+  <div class="prevnext__cell">
+    {older && <a href={urlFor(older)} rel="prev"><span class="label">← Older</span><span class="prevnext__title">{older.data.title}</span></a>}
+  </div>
+  <a class="label prevnext__all" href={`/${section}/`}>All {SECTION_META[section].label}</a>
+  <div class="prevnext__cell prevnext__cell--next">
+    {newer && <a href={urlFor(newer)} rel="next"><span class="label">Newer →</span><span class="prevnext__title">{newer.data.title}</span></a>}
+  </div>
+</nav>

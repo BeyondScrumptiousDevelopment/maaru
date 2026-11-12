@@ -1,0 +1,38 @@
+---
+/**
+ * The maaru. logo, inlined from the kit's SVGs so it is crisp and colourable.
+ * Letters take `currentColor`; the full stop is var(--maaru-dot) (gold).
+ * Never set "maaru." as live text instead of this.
+ */
+import wordmark from '../assets/brand/maaru-wordmark.svg?raw';
+import monogram from '../assets/brand/maaru-monogram-ink-mono.svg?raw';
+
+interface Props {
+  variant?: 'wordmark' | 'monogram';
+  /** Accessible name. Pass "" when the parent (e.g. a link) already has a label. */
+  label?: string;
+  class?: string;
+  style?: string;
+}
+const { variant = 'wordmark', label = 'maaru.', class: cls = '', style } = Astro.props;
+
+let svg = variant === 'wordmark' ? wordmark : monogram;
+if (variant === 'monogram') {
+  // make the mono monogram colourable: letters currentColor, dot gold
+  const paths = [...svg.matchAll(/<path [^>]*>/g)];
+  paths.forEach((m, i) => {
+    const repl = m[0].replace(/fill="[^"]*"/, `fill="${i === paths.length - 1 ? 'var(--maaru-dot, #A88955)' : 'currentColor'}"`);
+    svg = svg.replace(m[0], repl);
+  });
+}
+svg = svg.replace(/<title>.*?<\/title>/, '').replace(/ role="img"/, '').replace(/ aria-label="[^"]*"/, '');
+svg = label
+  ? svg.replace('<svg ', `<svg role="img" aria-label="${label}" focusable="false" `)
+  : svg.replace('<svg ', '<svg aria-hidden="true" focusable="false" ');
+---
+<span class:list={['logo', `logo--${variant}`, cls]} style={style} set:html={svg} />
+
+<style>
+  .logo { display: inline-block; line-height: 0; }
+  .logo :global(svg) { display: block; width: 100%; height: auto; overflow: visible; }
+</style>

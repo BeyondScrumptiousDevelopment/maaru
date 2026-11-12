@@ -1,0 +1,25 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import Photo from '../components/Photo.astro';
+import Stamp from '../components/Stamp.astro';
+import Mark from '../components/Mark.astro';
+import portrait from '../assets/placeholder/about/portrait.jpg';
+---
+<SiteLayout title="About" description="MAARU is a creative collective of one. An ever-growing collection of ideas, images, sounds, places and everything else.">
+  <article class="about wrap">
+    <p class="label about__n">About</p>
+    <h1 class="about__statement">A creative collective <i>of one.</i> An ever-growing collection of ideas, images, sounds, places and <span class="circled">everything else<Mark name="circle-gold" class="circled__mark" stretch /></span>.</h1>
+    <figure class="about__img">
+      <Photo src={portrait} alt="Placeholder for a portrait — a pale wall with a band of window light." sizes="(min-width: 1024px) 30vw, 80vw" />
+      <figcaption class="label">Frame 01 — placeholder</figcaption>
+    </figure>
+    <div class="about__text">
+      <p>MAARU is where I keep the things I notice. It started in Harrow and wanders out from there — to Kutchh, to Nairobi, to the record shops and stairwells and bus routes in between.</p>
+      <p>There is no plan and no niche. Some of it is finished, most of it is not. Photographs sit next to half an idea about shop bells. A list of records sits next to a diary from a beach. That is the point: a collection, not a portfolio.</p>
+      <p>If something here made you look twice at your own street, it worked.</p>
+      {/* To add a contact link, uncomment and set a real address:
+      <p class="about__contact"><span class="label">Say hello</span> <a href="mailto:you@example.com">you@example.com</a></p> */}
+    </div>
+    <Stamp class="about__stamp" rotate={11} />
+  </article>
+</SiteLayout>

@@ -1,0 +1,110 @@
+/* ==========================================================================
+   MAARU — design tokens
+   Import after fonts.css. Every colour, font, size and motion value on the
+   site should come from here. Change it here, it changes everywhere.
+   ========================================================================== */
+:root {
+  /* ---- Colour: core palette ---- */
+  --ink:          #171614;  /* Ink Black — main type, contrast */
+  --beige:        #C7B49D;  /* Warm Beige — supporting backgrounds */
+  --cream:        #E9DFD0;  /* Plaster Cream — main background */
+  --gold:         #A88955;  /* Antique Gold — accents only (the dot, rules, marks) */
+  --stone:        #786B5D;  /* Weathered Stone — secondary text, metadata */
+
+  /* ---- Colour: derived (keep these subtle) ---- */
+  --cream-deep:   #DED2C0;  /* slightly darker cream for layered paper */
+  --ink-soft:     #2A2724;  /* raised ink surface on dark sections */
+  --stone-text:   #665A4E;  /* stone darkened for readable small text: 5.1:1 on cream */
+  --gold-text:    #6E5A38;  /* gold darkened for text links/labels on cream: 5.0:1 */
+  --gold-faded:   rgba(168, 137, 85, 0.35);
+  --rule:         rgba(23, 22, 20, 0.18);   /* hairlines on cream */
+  --rule-light:   rgba(233, 223, 208, 0.2); /* hairlines on ink */
+
+  /* ---- Colour: roles ---- */
+  --bg:           var(--cream);
+  --text:         var(--ink);
+  --text-muted:   var(--stone-text); /* metadata, captions. Raw --stone is 3.9:1 on cream: large text only */
+  --accent:       var(--gold);    /* decorative. Raw gold is 2.5:1 on cream: never for text on cream (use --gold-text). Fine as text on ink (5.5:1) */
+  --link:         var(--ink);
+  --link-hover:   var(--gold-text);
+  --focus:        var(--gold);
+  --selection-bg: var(--ink);
+  --selection-fg: var(--cream);
+  --maaru-dot:    var(--gold);    /* colour of the full stop in logo SVGs that use it */
+
+  /* ---- Typography: families ---- */
+  --font-logo:    "Nunito", "Nunito Sans", ui-rounded, system-ui, sans-serif; /* logotype only */
+  --font-serif:   "Cormorant Garamond", "Iowan Old Style", Georgia, serif;   /* editorial headlines */
+  --font-sans:    "Nunito Sans", "Helvetica Neue", Arial, system-ui, sans-serif; /* body, nav, captions */
+  --font-label:   "Barlow Condensed", "Arial Narrow", sans-serif;           /* labels, numbers, dates */
+
+  /* ---- Typography: fluid scale (mobile → desktop) ---- */
+  --step--2: clamp(0.70rem, 0.68rem + 0.10vw, 0.76rem);  /* micro labels */
+  --step--1: clamp(0.82rem, 0.79rem + 0.15vw, 0.90rem);  /* captions, meta */
+  --step-0:  clamp(1.00rem, 0.96rem + 0.20vw, 1.10rem);  /* body */
+  --step-1:  clamp(1.20rem, 1.12rem + 0.40vw, 1.45rem);  /* lead / standfirst */
+  --step-2:  clamp(1.50rem, 1.33rem + 0.85vw, 2.10rem);  /* h3 */
+  --step-3:  clamp(1.95rem, 1.62rem + 1.60vw, 3.10rem);  /* h2 */
+  --step-4:  clamp(2.60rem, 1.95rem + 3.20vw, 4.80rem);  /* h1 / feature titles */
+  --step-5:  clamp(3.40rem, 2.20rem + 6.00vw, 8.00rem);  /* statement type */
+  --step-6:  clamp(4.50rem, 2.00rem + 12.5vw, 14rem);    /* oversized editorial moments */
+
+  --leading-tight: 0.95;
+  --leading-snug:  1.15;
+  --leading-body:  1.6;
+  --tracking-label: 0.22em;   /* uppercase condensed labels */
+  --tracking-tight: -0.02em;  /* big serif headlines */
+  --measure: 66ch;            /* max reading width */
+
+  /* ---- Space ---- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs:  0.75rem;
+  --space-s:   1rem;
+  --space-m:   1.5rem;
+  --space-l:   clamp(2rem, 1.6rem + 2vw, 3rem);
+  --space-xl:  clamp(3rem, 2.2rem + 4vw, 5.5rem);
+  --space-2xl: clamp(4.5rem, 3rem + 7.5vw, 9rem);
+  --gutter:    clamp(1.1rem, 0.6rem + 2.5vw, 2.5rem);
+  --page-max:  1440px;
+
+  /* ---- Shape: deliberately square. Rounding belongs to the logo, not the UI ---- */
+  --radius-0: 0;
+  --radius-s: 2px;           /* images, inputs */
+  --radius-pill: 999px;      /* tags / filter chips only */
+
+  /* ---- Layers ---- */
+  --z-texture: 1;  --z-content: 2;  --z-nav: 50;  --z-menu: 60;  --z-lightbox: 80;  --z-grain: 90;
+
+  /* ---- Motion ---- */
+  --ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-ink:   cubic-bezier(0.65, 0, 0.35, 1);   /* for line/stroke draws */
+  --dur-fast:   160ms;
+  --dur-base:   320ms;
+  --dur-slow:   700ms;
+  --dur-reveal: 1400ms;   /* logo/signature reveal */
+
+  /* ---- Texture paths (copy /textures and /graphics into /public) ---- */
+  --tex-plaster-cream: url("/textures/plaster-cream.jpg");
+  --tex-plaster-beige: url("/textures/plaster-beige.jpg");
+  --tex-concrete:      url("/textures/concrete-stone.jpg");
+  --tex-wall-ink:      url("/textures/wall-ink.jpg");
+  --tex-paper:         url("/textures/paper-cream.jpg");
+  --tex-grain:         url("/textures/grain-overlay.png");
+  --tex-photocopy:     url("/textures/photocopy-overlay.png");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root { --dur-fast: 0ms; --dur-base: 0ms; --dur-slow: 0ms; --dur-reveal: 0ms; }
+}
+
+/* ---- Suggested base (optional — Claude Code can fold into global.css) ---- */
+::selection { background: var(--selection-bg); color: var(--selection-fg); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+
+/* Site-wide film grain: add <div class="grain" aria-hidden="true"></div> once in the layout */
+.grain {
+  position: fixed; inset: -50%; pointer-events: none; z-index: var(--z-grain);
+  background-image: var(--tex-grain); background-size: 256px; opacity: 0.55;
+  mix-blend-mode: multiply;
+}

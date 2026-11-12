@@ -1,0 +1,31 @@
+---
+import collective from '../assets/brand/maaru-collective-stacked-cream.svg?raw';
+import Stamp from './Stamp.astro';
+import TornEdge from './TornEdge.astro';
+const lockup = collective.replace(/<title>.*?<\/title>/, '').replace(/ role="img"/, '').replace(/ aria-label="[^"]*"/, '').replace('<svg ', '<svg role="img" aria-label="maaru. — The Maaru Collective. There\'s life in the mundane." ');
+const year = new Date().getFullYear();
+const links = [
+  ['/journal/', 'Journal'], ['/visuals/', 'Visuals'], ['/frequencies/', 'Frequencies'], ['/elsewhere/', 'Elsewhere'],
+  ['/experiments/', 'Experiments'], ['/everything/', 'Everything'], ['/about/', 'About'],
+];
+interface Props { torn?: boolean; tornBg?: 'cream' | 'beige' }
+const { torn = true, tornBg = 'cream' } = Astro.props;
+---
+{torn && <div class:list={['footer__tear', `footer__tear--${tornBg}`]}><TornEdge color="ink" /></div>}
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <a href="/home/" class="footer__lockup" set:html={lockup} />
+    </div>
+    <nav class="footer__nav" aria-label="Footer">
+      <ul>{links.map(([href, label]) => <li><a class="label" href={href}>{label}</a></li>)}</ul>
+    </nav>
+    <div class="footer__aside">
+      <p class="footer__line">There's life in the mundane.</p>
+      <p><a class="label footer__wall" href="/">← Back to the wall</a></p>
+      <p class="label footer__rss"><a href="/journal/rss.xml">Journal RSS</a></p>
+    </div>
+    <Stamp class="footer__stamp" rotate={14} />
+  </div>
+  <p class="label footer__legal">© {year} MAARU · maaru.me · A creative collective of one</p>
+</footer>

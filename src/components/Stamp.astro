@@ -1,0 +1,24 @@
+---
+/**
+ * The distressed circular stamp. Drawn as a CSS mask of /brand/maaru-stamp.svg so the
+ * (large) SVG downloads once and is cached, and the colour follows `color` (currentColor).
+ */
+interface Props { class?: string; rotate?: number; label?: string; style?: string }
+const { class: cls = '', rotate = -8, label = '', style = '' } = Astro.props;
+---
+<span
+  class:list={['stamp', cls]}
+  style={`--stamp-rot:${rotate}deg;${style}`}
+  role={label ? 'img' : undefined}
+  aria-label={label || undefined}
+  aria-hidden={label ? undefined : 'true'}
+></span>
+
+<style>
+  .stamp {
+    display: inline-block; aspect-ratio: 1; transform: rotate(var(--stamp-rot));
+    background-color: currentColor;
+    -webkit-mask: url('/brand/maaru-stamp.svg') center / contain no-repeat;
+    mask: url('/brand/maaru-stamp.svg') center / contain no-repeat;
+  }
+</style>

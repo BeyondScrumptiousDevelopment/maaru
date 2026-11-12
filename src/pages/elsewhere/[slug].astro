@@ -1,0 +1,51 @@
+---
+import { render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Gallery from '../../components/Gallery.astro';
+import Stamp from '../../components/Stamp.astro';
+import Mark from '../../components/Mark.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { getSection, neighbours, tagsOf, excerptOf } from '../../lib/entries';
+import { coords, range } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const items = await getSection('elsewhere');
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const loc = d.location!;
+const { newer, older } = neighbours(await getSection('elsewhere'), entry.id);
+const imgs = [...(d.image ? [{ src: d.image, alt: d.imageAlt ?? '', caption: undefined as string | undefined }] : []), ...d.gallery];
+const group = `e-${entry.id}`;
+---
+<SiteLayout title={d.title} description={excerptOf(entry, 200)} image={d.image} imageAlt={d.imageAlt} type="article" section="elsewhere">
+  <article class="place">
+    <header class="place__head wrap">
+      <p class="label place__loc">{loc.name.toUpperCase()} — {coords(loc.lat, loc.lng)}</p>
+      <h1 class="place__title">{d.title}</h1>
+      <p class="label place__date"><time datetime={d.date.toISOString()}>{range(d.date, d.dateEnd)}</time>{loc.country && ` — ${loc.country}`}</p>
+      {d.description && <p class="place__standfirst">{d.description}</p>}
+      <Stamp class="place__stamp" rotate={-9} />
+    </header>
+
+    <div class="place__grid wrap">
+      <div class="diary prose"><Content /></div>
+      <div class="place__photos">
+        {imgs.map((g, i) => (
+          <Gallery src={g.src} alt={g.alt} caption={g.caption} frame={i + 1} total={imgs.length} group={group} class={`place__photo place__photo--${i % 3}`} eager={i === 0} sizes="(min-width: 1024px) 40vw, 100vw" />
+        ))}
+      </div>
+    </div>
+
+    {d.remember.length > 0 && (
+      <section class="remember wrap" aria-labelledby="remember-h">
+        <h2 id="remember-h" class="remember__title">Worth <i>remembering</i><Mark name="underline-gold" class="remember__line" /></h2>
+        <ol class="remember__list">{d.remember.map((r) => <li>{r}</li>)}</ol>
+      </section>
+    )}
+    {tagsOf(entry).length > 0 && <ul class="tag-list tag-list--row wrap" role="list">{tagsOf(entry).map((t) => <li><a class="label" href={`/everything/?tag=${t}`}>#{t}</a></li>)}</ul>}
+  </article>
+  <PrevNext newer={newer} older={older} section="elsewhere" />
+</SiteLayout>

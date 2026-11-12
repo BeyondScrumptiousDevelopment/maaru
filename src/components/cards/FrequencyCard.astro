@@ -1,0 +1,22 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Sleeve from '../Sleeve.astro';
+import { short } from '../../lib/dates';
+import { urlFor } from '../../lib/entries';
+interface Props { entry: CollectionEntry<'frequencies'>; compact?: boolean; as?: 'h2' | 'h3'; class?: string; style?: string }
+const { entry, compact = false, as = 'h3', class: cls = '', style } = Astro.props;
+const d = entry.data;
+const tracks = d.tracklist.slice(0, compact ? 0 : 3);
+---
+<article class:list={['card card--frequency', { 'is-compact': compact }, cls]} style={style}>
+  <a class="card__link card__link--block" href={urlFor(entry)}>
+    <Sleeve title={d.title} catalogue={d.catalogue} tracks={d.tracklist.length} mood={d.mood} as={as} size={compact ? 'small' : 'normal'} />
+  </a>
+  {tracks.length > 0 && (
+    <ol class="card__tracks">
+      {tracks.map((t, n) => <li><span class="label">{t.side ?? ''}{n + 1}</span><span>{t.artist} — <i>{t.title}</i></span></li>)}
+      {d.tracklist.length > 3 && <li class="label">+ {d.tracklist.length - 3} more</li>}
+    </ol>
+  )}
+  <p class="label card__foot"><time datetime={d.date.toISOString()}>{short(d.date)}</time>{d.embeds.length > 0 && ' — with player'}</p>
+</article>

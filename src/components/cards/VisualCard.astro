@@ -1,0 +1,23 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Photo from '../Photo.astro';
+import { short } from '../../lib/dates';
+import { coverOf, urlFor } from '../../lib/entries';
+interface Props { entry: CollectionEntry<'visuals'>; compact?: boolean; as?: 'h2' | 'h3'; class?: string; style?: string; sizes?: string }
+const { entry, compact = false, as: H = 'h3', class: cls = '', style, sizes = '(min-width: 1024px) 40vw, 100vw' } = Astro.props;
+const d = entry.data;
+const cover = coverOf(entry);
+const frames = d.gallery.length + (d.image && !d.gallery.some((g) => g.src === d.image) ? 1 : 0);
+const sheet = [d.roll, d.format === 'video' ? 'MOVING PICTURE' : frames ? `${frames} FRAMES` : ''].filter(Boolean).join(' / ');
+---
+<article class:list={['card card--visual', { 'is-compact': compact }, cls]} style={style}>
+  {cover ? <div class="card__img">
+    <Photo src={cover.src} alt={cover.alt} sizes={compact ? '(min-width: 768px) 25vw, 50vw' : sizes} />
+    {d.format === 'video' && <span class="label card__play" aria-hidden="true">▶ Video</span>}
+  </div> : <div class="card__img card__img--empty" aria-hidden="true"></div>}
+  <div class="card__sheet">
+    <p class="label">{sheet}</p>
+    <p class="label"><time datetime={d.date.toISOString()}>{short(d.date)}</time></p>
+  </div>
+  <H class="card__title"><a class="card__link" href={urlFor(entry)}>{d.title}</a></H>
+</article>

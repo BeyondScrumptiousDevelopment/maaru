@@ -1,0 +1,80 @@
+---
+import Logo from './Logo.astro';
+import Stamp from './Stamp.astro';
+import { getCounts } from '../lib/entries';
+
+const counts = await getCounts();
+const items = [
+  { href: '/journal/', label: 'Journal', key: 'journal' },
+  { href: '/visuals/', label: 'Visuals', key: 'visuals' },
+  { href: '/frequencies/', label: 'Frequencies', key: 'frequencies' },
+  { href: '/elsewhere/', label: 'Elsewhere', key: 'elsewhere' },
+  { href: '/experiments/', label: 'Experiments', key: 'experiments' },
+  { href: '/everything/', label: 'Everything', key: 'everything' },
+  { href: '/about/', label: 'About', key: 'about' },
+] as const;
+const path = Astro.url.pathname.replace(/\/$/, '') + '/';
+const isPage = (href: string) => path === href;
+const inSection = (href: string) => path.startsWith(href);
+const total = Object.values(counts).reduce((a, b) => a + b, 0);
+const countFor = (key: string) => (key in counts ? counts[key as keyof typeof counts] : key === 'everything' ? total : undefined);
+interface Props { tone?: 'cream' | 'ink' }
+const { tone = 'cream' } = Astro.props;
+---
+<header class:list={['nav', `nav--${tone}`]}>
+  <a class="nav__logo" href="/home/" aria-label="maaru. — home"><Logo label="" /></a>
+  <nav class="nav__main" aria-label="Main">
+    <ul>
+      {items.map((it) => (
+        <li>
+          <a href={it.href} class:list={['nav__link label', { 'is-active': inSection(it.href) }]} aria-current={isPage(it.href) ? 'page' : inSection(it.href) ? 'true' : undefined}>{it.label}</a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+  <button class="nav__menu label" type="button" aria-expanded="false" aria-controls="site-menu">Menu</button>
+</header>
+
+<dialog id="site-menu" class="menu" aria-label="Site menu">
+  <div class="menu__top">
+    <a class="menu__logo" href="/home/" aria-label="maaru. — home"><Logo label="" /></a>
+    <button class="menu__close label" type="button">Close ✕</button>
+  </div>
+  <nav aria-label="Sections">
+    <ol class="menu__list">
+      {items.map((it, n) => (
+        <li>
+          <a href={it.href} aria-current={isPage(it.href) ? 'page' : inSection(it.href) ? 'true' : undefined}>
+            <span class="label menu__n">{String(n + 1).padStart(2, '0')}</span>
+            <span class="menu__name">{it.label}</span>
+            {countFor(it.key) !== undefined && <span class="label menu__count">{countFor(it.key)}</span>}
+          </a>
+        </li>
+      ))}
+    </ol>
+  </nav>
+  <div class="menu__foot">
+    <Stamp class="menu__stamp" rotate={-12} />
+    <p class="label">There's life in the mundane.</p>
+  </div>
+</dialog>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('.nav__menu');
+  const menu = document.querySelector<HTMLDialogElement>('#site-menu');
+  if (btn && menu) {
+    const close = () => menu.close();
+    btn.addEventListener('click', () => {
+      menu.showModal();
+      btn.setAttribute('aria-expanded', 'true');
+      document.documentElement.classList.add('is-locked');
+    });
+    menu.querySelector('.menu__close')?.addEventListener('click', close);
+    menu.addEventListener('close', () => {
+      btn.setAttribute('aria-expanded', 'false');
+      document.documentElement.classList.remove('is-locked');
+      btn.focus();
+    });
+    matchMedia('(min-width: 961px)').addEventListener('change', (e) => { if (e.matches && menu.open) close(); });
+  }
+</script>

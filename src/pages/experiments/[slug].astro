@@ -1,0 +1,66 @@
+---
+import { render } from 'astro:content';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Photo from '../../components/Photo.astro';
+import VideoPlayer from '../../components/VideoPlayer.astro';
+import Gallery from '../../components/Gallery.astro';
+import Mark from '../../components/Mark.astro';
+import PrevNext from '../../components/PrevNext.astro';
+import { getSection, neighbours, tagsOf, excerptOf } from '../../lib/entries';
+import { short, ago } from '../../lib/dates';
+
+export async function getStaticPaths() {
+  const items = await getSection('experiments');
+  return items.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const d = entry.data;
+const { newer, older } = neighbours(await getSection('experiments'), entry.id);
+const touched = d.lastTouched ?? d.updated ?? d.date;
+---
+<SiteLayout title={d.title} description={excerptOf(entry, 200)} image={d.image} imageAlt={d.imageAlt} type="article" section="experiments">
+  <article class:list={['exp', `is-${d.status}`]}>
+    <header class="exp__head wrap">
+      <div class="exp__card">
+        <p class="exp__status"><span class="label status">{d.status.replace('-', ' ')}</span>{d.version && <span class="label">{d.version}</span>}</p>
+        <h1 class="exp__title">{d.title}</h1>
+        {d.description && <p class="exp__idea">{d.description}</p>}
+        <dl class="exp__log">
+          <div><dt class="label">Started</dt><dd>{short(d.date)}</dd></div>
+          <div><dt class="label">Last touched</dt><dd><time datetime={touched.toISOString()}>{short(touched)}</time> ({ago(touched)})</dd></div>
+          {d.version && <div><dt class="label">Version</dt><dd>{d.version}</dd></div>}
+        </dl>
+        {d.status === 'abandoned' && <Mark name="cross" class="exp__cross" />}
+      </div>
+    </header>
+
+    <div class="exp__blocks wrap">
+      {d.image && <figure class="exp__img"><Photo src={d.image} alt={d.imageAlt ?? ''} sizes="(min-width: 1024px) 50vw, 100vw" eager /></figure>}
+      <div class="prose exp__text"><Content /></div>
+      {d.video && <VideoPlayer url={d.video.url} poster={d.video.poster} caption={d.video.caption} title={d.title} class="exp__video" />}
+      {d.gallery.length > 0 && (
+        <div class="exp__gallery">{d.gallery.map((g, i) => <Gallery src={g.src} alt={g.alt} caption={g.caption} frame={i + 1} total={d.gallery.length} group={`x-${entry.id}`} sizes="(min-width: 768px) 33vw, 100vw" />)}</div>
+      )}
+      {d.next && (
+        <aside class="exp__next" aria-label="What I'd do next">
+          <p class="label">What I'd do next</p>
+          <p>{d.next}</p>
+        </aside>
+      )}
+      {d.history.length > 0 && (
+        <section class="exp__history" aria-labelledby="hist-h">
+          <h2 id="hist-h" class="label">Version history</h2>
+          <ol role="list">
+            {[...d.history].reverse().map((h) => (
+              <li><span class="label">{h.version}</span><time class="label" datetime={h.date.toISOString()}>{short(h.date)}</time><span>{h.note}</span></li>
+            ))}
+          </ol>
+        </section>
+      )}
+      {d.links.length > 0 && <ul class="post__links" role="list">{d.links.map((l) => <li><a href={l.url} rel="noopener">{l.label} ↗</a></li>)}</ul>}
+      {tagsOf(entry).length > 0 && <ul class="tag-list tag-list--row" role="list">{tagsOf(entry).map((t) => <li><a class="label" href={`/everything/?tag=${t}`}>#{t}</a></li>)}</ul>}
+    </div>
+  </article>
+  <PrevNext newer={newer} older={older} section="experiments" />
+</SiteLayout>
