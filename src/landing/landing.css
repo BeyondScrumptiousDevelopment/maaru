@@ -51,7 +51,7 @@
 .landing__stage { position: relative; flex: 1; display: flex; flex-direction: column; }
 
 /* ---------- the pieces ---------- */
-.landing__word { position: relative; z-index: 3; margin: 0; line-height: 0; color: var(--ink); }
+.landing__word { position: relative; z-index: 3; margin: 0; line-height: 0; color: var(--ink); pointer-events: none; }
 .landing__word .logo { width: 100%; }
 
 .landing__scrap {
@@ -61,6 +61,7 @@
   background-size: 420px;
   box-shadow: 0 1px 0 rgba(23, 22, 20, 0.06), 0 10px 24px -14px rgba(23, 22, 20, 0.45);
   clip-path: polygon(0 2%, 14% 0, 31% 3%, 47% 0, 63% 2%, 80% 0, 100% 3%, 97% 12%, 100% 24%, 96% 37%, 99% 50%, 95% 63%, 100% 76%, 96% 88%, 100% 100%, 82% 97%, 66% 100%, 49% 97%, 30% 100%, 13% 97%, 0 100%, 3% 86%, 0 70%, 3% 52%, 0 34%, 2% 17%);
+  translate: var(--dx, 0px) var(--dy, 0px);
   animation: landing-drop 700ms var(--ease-out) 650ms both;
 }
 
@@ -73,12 +74,12 @@
   background-size: 300px;
   box-shadow: 0 2px 2px rgba(23, 22, 20, 0.08), 0 18px 34px -18px rgba(23, 22, 20, 0.55);
   rotate: var(--r, 3deg);
-  translate: var(--px, 0) var(--py, 0);
-  transition: translate 600ms var(--ease-out);
+  translate: calc(var(--px, 0px) + var(--dx, 0px)) calc(var(--py, 0px) + var(--dy, 0px));
+  transition: translate 600ms var(--ease-out), rotate var(--dur-base) var(--ease-out), box-shadow var(--dur-base);
   animation: landing-photo 800ms var(--ease-out) var(--d, 700ms) both;
 }
 .landing__photo img { width: 100%; height: auto; filter: contrast(1.02); }
-.landing__photo figcaption { position: absolute; left: 0.75rem; bottom: 0.6rem; font-size: var(--step--2); color: var(--stone-text); }
+.landing__caption { position: absolute; left: 0.75rem; bottom: 0.6rem; font-size: var(--step--2); color: var(--stone-text); }
 .landing__tape {
   position: absolute; width: 34%; height: 1.4rem; z-index: 1;
   background: var(--beige); opacity: 0.4;
@@ -89,7 +90,7 @@
 
 .landing__stamp {
   position: absolute; z-index: 5; color: var(--gold);
-  translate: var(--px, 0) var(--py, 0);
+  translate: calc(var(--px, 0px) + var(--dx, 0px)) calc(var(--py, 0px) + var(--dy, 0px));
   transition: translate 600ms var(--ease-out);
   animation: landing-thump 500ms var(--ease-out) 1250ms both;
 }
@@ -184,7 +185,7 @@
   .landing__scrap--word { left: -1.5vw; top: 14vw; width: 8vw; height: 15vw; rotate: -7deg; }
 
   .landing__photo { position: absolute; padding: 0.7vw 0.7vw 2.4vw; }
-  .landing__photo figcaption { left: 0.9vw; bottom: 0.7vw; }
+  .landing__caption { left: 0.9vw; bottom: 0.7vw; }
   .landing__photo--a { --r: 3.5deg; --d: 700ms; right: 13vw; top: 3vw; width: 19vw; margin: 0; }
   .landing__photo--b { --r: -3deg; --d: 850ms; display: block; left: 15vw; bottom: calc(1.5vw + 3rem); width: 23vw; }
 
@@ -204,6 +205,53 @@
   /* squarer screens (e.g. 1024×768): pull the lower pieces up a touch */
   .landing__note { top: 31vw; }
   .landing__tagline { font-size: var(--step-3); }
+}
+
+/* ---------- interaction: drag, turn over, stamp ---------- */
+.landing__card { position: relative; }
+.landing__back {
+  position: absolute; inset: -0.6rem -0.6rem -2.2rem; padding: 1.1rem 1rem;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 0.6rem;
+  background-color: var(--cream); background-image: var(--tex-paper); background-size: 300px;
+  visibility: hidden;
+}
+.landing__back-note { font-family: var(--font-serif); font-style: italic; font-size: var(--step-2); line-height: 1.1; color: var(--ink); }
+.landing__back-meta { color: var(--stone-text); }
+.landing__photo.is-back .landing__back { visibility: visible; }
+.landing__photo.is-back .landing__caption { visibility: hidden; }
+.landing__card.is-turning { animation: landing-turn 360ms var(--ease-ink); }
+@keyframes landing-turn { 50% { transform: scaleX(0.02); } }
+
+.is-draggable { cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; }
+.landing__photo.is-draggable:not([data-stamp]) { touch-action: manipulation; }
+@media (pointer: fine) { .landing__photo.is-draggable { touch-action: none; } }
+.landing__photo[data-flip] { cursor: pointer; }
+@media (pointer: fine) { .landing__photo[data-flip] { cursor: grab; } }
+.is-dragging { cursor: grabbing !important; transition: none !important; }
+.landing__photo.is-dragging { rotate: calc(var(--r, 3deg) * 0.3); box-shadow: 0 4px 6px rgba(23, 22, 20, 0.1), 0 34px 50px -24px rgba(23, 22, 20, 0.6); }
+.landing__photo:focus-visible, .landing__stamp:focus-visible { outline: 2px solid var(--gold); outline-offset: 6px; }
+.landing__stamp { cursor: grab; border-radius: 50%; }
+.landing__stamp.is-thump .stamp { animation: landing-press 380ms var(--ease-out); }
+@keyframes landing-press { 0% { scale: 1; } 35% { scale: 0.9; } 100% { scale: 1; } }
+
+.landing__marks { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.landing__mark {
+  position: absolute; aspect-ratio: 1; background-color: var(--gold); opacity: 0.32;
+  mix-blend-mode: multiply;
+  -webkit-mask: url('/brand/maaru-stamp.svg') center / contain no-repeat;
+  mask: url('/brand/maaru-stamp.svg') center / contain no-repeat;
+  animation: landing-ink 500ms var(--ease-out) both;
+}
+@keyframes landing-ink { from { opacity: 0.7; scale: 1.04; } }
+
+.landing__hint { color: var(--stone-text); }
+.landing__tidy {
+  min-height: 44px; padding: 0 0.2rem; color: var(--gold-text); background: none; border: 0; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 0.3em;
+}
+.landing__tidy:hover { color: var(--ink); }
+@media (max-width: 899px), (max-aspect-ratio: 1/1) {
+  .landing__hint { display: none; }
 }
 
 /* ---------- motion ---------- */

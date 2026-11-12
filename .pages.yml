@@ -1,0 +1,682 @@
+# Pages CMS configuration — edit the site's content at https://app.pagescms.org
+# Every section in src/content/ appears as a collection. Saving in the CMS commits
+# to GitHub, and Cloudflare redeploys the site automatically.
+
+media:
+  input: src/assets/uploads
+  output: ../../assets/uploads
+  categories: [image]
+
+content:
+  - name: journal
+    label: Journal
+    description: "Notes, essays, observations, stories, ideas"
+    type: collection
+    path: src/content/journal
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: "Title"
+        type: string
+        required: true
+      - name: date
+        label: "Date"
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: "Short description"
+        type: text
+        description: "Under 240 characters. Shown on cards, in search and link previews. Leave empty to use the first paragraph."
+      - name: kind
+        label: "Kind"
+        type: select
+        required: true
+        default: "essay"
+        options:
+          values: [note, essay, observation, story, idea]
+      - name: image
+        label: "Main image"
+        type: image
+      - name: imageAlt
+        label: "Main image — alt text"
+        type: string
+        description: "Required if you add a main image. Describe what is in the photo."
+      - name: gallery
+        label: "Gallery"
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: "Image"
+            type: image
+            required: true
+          - name: alt
+            label: "Alt text"
+            type: string
+            required: true
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: video
+        label: "Video"
+        type: object
+        fields:
+          - name: url
+            label: "Video URL"
+            type: string
+            description: "YouTube or Vimeo link, or a direct link to a video file."
+          - name: poster
+            label: "Poster image"
+            type: image
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: tags
+        label: "Tags"
+        type: string
+        list: true
+      - name: location
+        label: "Location"
+        type: object
+        fields:
+          - name: name
+            label: "Place"
+            type: string
+          - name: country
+            label: "Country"
+            type: string
+          - name: lat
+            label: "Latitude"
+            type: number
+            description: "South is negative"
+          - name: lng
+            label: "Longitude"
+            type: number
+            description: "West is negative"
+      - name: links
+        label: "Links"
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: "Label"
+            type: string
+            required: true
+          - name: url
+            label: "URL"
+            type: string
+            required: true
+      - name: featured
+        label: "Featured on /home"
+        type: boolean
+        default: false
+      - name: draft
+        label: "Draft (hidden on the live site)"
+        type: boolean
+        default: false
+      - name: body
+        label: "Text"
+        type: rich-text
+
+  - name: visuals
+    label: Visuals
+    description: "Photo and video collections"
+    type: collection
+    path: src/content/visuals
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: "Title"
+        type: string
+        required: true
+      - name: date
+        label: "Date"
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: "Short description"
+        type: text
+        description: "Under 240 characters. Shown on cards, in search and link previews. Leave empty to use the first paragraph."
+      - name: format
+        label: "Format"
+        type: select
+        default: "photo"
+        options:
+          values: [photo, video, mixed]
+      - name: roll
+        label: "Roll label"
+        type: string
+        description: "e.g. ROLL 05 — shown like a contact sheet"
+      - name: image
+        label: "Main image"
+        type: image
+      - name: imageAlt
+        label: "Main image — alt text"
+        type: string
+        description: "Required if you add a main image. Describe what is in the photo."
+      - name: gallery
+        label: "Gallery"
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: "Image"
+            type: image
+            required: true
+          - name: alt
+            label: "Alt text"
+            type: string
+            required: true
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: video
+        label: "Video"
+        type: object
+        fields:
+          - name: url
+            label: "Video URL"
+            type: string
+            description: "YouTube or Vimeo link, or a direct link to a video file."
+          - name: poster
+            label: "Poster image"
+            type: image
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: tags
+        label: "Tags"
+        type: string
+        list: true
+      - name: location
+        label: "Location"
+        type: object
+        fields:
+          - name: name
+            label: "Place"
+            type: string
+          - name: country
+            label: "Country"
+            type: string
+          - name: lat
+            label: "Latitude"
+            type: number
+            description: "South is negative"
+          - name: lng
+            label: "Longitude"
+            type: number
+            description: "West is negative"
+      - name: links
+        label: "Links"
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: "Label"
+            type: string
+            required: true
+          - name: url
+            label: "URL"
+            type: string
+            required: true
+      - name: featured
+        label: "Featured on /home"
+        type: boolean
+        default: false
+      - name: draft
+        label: "Draft (hidden on the live site)"
+        type: boolean
+        default: false
+      - name: body
+        label: "Text"
+        type: rich-text
+
+  - name: frequencies
+    label: Frequencies
+    description: "Records, mixes and listening notes"
+    type: collection
+    path: src/content/frequencies
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: "Title"
+        type: string
+        required: true
+      - name: date
+        label: "Date"
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: "Short description"
+        type: text
+        description: "Under 240 characters. Shown on cards, in search and link previews. Leave empty to use the first paragraph."
+      - name: catalogue
+        label: "Catalogue number"
+        type: string
+        description: "e.g. MRU-008. Also decides the generated sleeve colours."
+        required: true
+      - name: mood
+        label: "Mood"
+        type: string
+      - name: tracklist
+        label: "Tracklist"
+        type: object
+        list: true
+        fields:
+          - name: side
+            label: "Side"
+            type: select
+            options:
+              values: [A, B]
+          - name: artist
+            label: "Artist"
+            type: string
+            required: true
+          - name: title
+            label: "Track"
+            type: string
+            required: true
+      - name: embeds
+        label: "Players"
+        type: object
+        list: true
+        fields:
+          - name: provider
+            label: "Service"
+            type: select
+            required: true
+            options:
+              values: [spotify, soundcloud, mixcloud, youtube, bandcamp]
+          - name: url
+            label: "Link"
+            type: string
+            description: "The normal share link. For Bandcamp, paste the EmbeddedPlayer link from Share / Embed."
+            required: true
+      - name: image
+        label: "Main image"
+        type: image
+      - name: imageAlt
+        label: "Main image — alt text"
+        type: string
+        description: "Required if you add a main image. Describe what is in the photo."
+      - name: gallery
+        label: "Gallery"
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: "Image"
+            type: image
+            required: true
+          - name: alt
+            label: "Alt text"
+            type: string
+            required: true
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: video
+        label: "Video"
+        type: object
+        fields:
+          - name: url
+            label: "Video URL"
+            type: string
+            description: "YouTube or Vimeo link, or a direct link to a video file."
+          - name: poster
+            label: "Poster image"
+            type: image
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: tags
+        label: "Tags"
+        type: string
+        list: true
+      - name: location
+        label: "Location"
+        type: object
+        fields:
+          - name: name
+            label: "Place"
+            type: string
+          - name: country
+            label: "Country"
+            type: string
+          - name: lat
+            label: "Latitude"
+            type: number
+            description: "South is negative"
+          - name: lng
+            label: "Longitude"
+            type: number
+            description: "West is negative"
+      - name: links
+        label: "Links"
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: "Label"
+            type: string
+            required: true
+          - name: url
+            label: "URL"
+            type: string
+            required: true
+      - name: featured
+        label: "Featured on /home"
+        type: boolean
+        default: false
+      - name: draft
+        label: "Draft (hidden on the live site)"
+        type: boolean
+        default: false
+      - name: body
+        label: "Text"
+        type: rich-text
+
+  - name: elsewhere
+    label: Elsewhere
+    description: "Places, diaries, postcards"
+    type: collection
+    path: src/content/elsewhere
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: "Title"
+        type: string
+        required: true
+      - name: date
+        label: "Date"
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: "Short description"
+        type: text
+        description: "Under 240 characters. Shown on cards, in search and link previews. Leave empty to use the first paragraph."
+      - name: location
+        label: "Location"
+        type: object
+        required: true
+        fields:
+          - name: name
+            label: "Place"
+            type: string
+            required: true
+          - name: country
+            label: "Country"
+            type: string
+          - name: lat
+            label: "Latitude"
+            type: number
+            description: "South is negative"
+          - name: lng
+            label: "Longitude"
+            type: number
+            description: "West is negative"
+      - name: dateEnd
+        label: "End date"
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: remember
+        label: "Worth remembering"
+        type: string
+        list: true
+      - name: image
+        label: "Main image"
+        type: image
+      - name: imageAlt
+        label: "Main image — alt text"
+        type: string
+        description: "Required if you add a main image. Describe what is in the photo."
+      - name: gallery
+        label: "Gallery"
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: "Image"
+            type: image
+            required: true
+          - name: alt
+            label: "Alt text"
+            type: string
+            required: true
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: video
+        label: "Video"
+        type: object
+        fields:
+          - name: url
+            label: "Video URL"
+            type: string
+            description: "YouTube or Vimeo link, or a direct link to a video file."
+          - name: poster
+            label: "Poster image"
+            type: image
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: tags
+        label: "Tags"
+        type: string
+        list: true
+      - name: links
+        label: "Links"
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: "Label"
+            type: string
+            required: true
+          - name: url
+            label: "URL"
+            type: string
+            required: true
+      - name: featured
+        label: "Featured on /home"
+        type: boolean
+        default: false
+      - name: draft
+        label: "Draft (hidden on the live site)"
+        type: boolean
+        default: false
+      - name: body
+        label: "Text"
+        type: rich-text
+
+  - name: experiments
+    label: Experiments
+    description: "Projects in every state of finish"
+    type: collection
+    path: src/content/experiments
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      fields: [title, date]
+      primary: title
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: "Title"
+        type: string
+        required: true
+      - name: date
+        label: "Date"
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: description
+        label: "Short description"
+        type: text
+        description: "Under 240 characters. Shown on cards, in search and link previews. Leave empty to use the first paragraph."
+      - name: status
+        label: "Status"
+        type: select
+        required: true
+        default: "in-progress"
+        options:
+          values: [in-progress, paused, done, abandoned]
+      - name: version
+        label: "Version"
+        type: string
+        description: "e.g. v0.3"
+      - name: lastTouched
+        label: "Last touched"
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: next
+        label: "What I'd do next"
+        type: text
+      - name: history
+        label: "Version history"
+        type: object
+        list: true
+        fields:
+          - name: version
+            label: "Version"
+            type: string
+            required: true
+          - name: date
+            label: "Date"
+            type: date
+            required: true
+            options:
+              format: yyyy-MM-dd
+          - name: note
+            label: "What changed"
+            type: string
+            required: true
+      - name: image
+        label: "Main image"
+        type: image
+      - name: imageAlt
+        label: "Main image — alt text"
+        type: string
+        description: "Required if you add a main image. Describe what is in the photo."
+      - name: gallery
+        label: "Gallery"
+        type: object
+        list: true
+        fields:
+          - name: src
+            label: "Image"
+            type: image
+            required: true
+          - name: alt
+            label: "Alt text"
+            type: string
+            required: true
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: video
+        label: "Video"
+        type: object
+        fields:
+          - name: url
+            label: "Video URL"
+            type: string
+            description: "YouTube or Vimeo link, or a direct link to a video file."
+          - name: poster
+            label: "Poster image"
+            type: image
+          - name: caption
+            label: "Caption"
+            type: string
+      - name: tags
+        label: "Tags"
+        type: string
+        list: true
+      - name: location
+        label: "Location"
+        type: object
+        fields:
+          - name: name
+            label: "Place"
+            type: string
+          - name: country
+            label: "Country"
+            type: string
+          - name: lat
+            label: "Latitude"
+            type: number
+            description: "South is negative"
+          - name: lng
+            label: "Longitude"
+            type: number
+            description: "West is negative"
+      - name: links
+        label: "Links"
+        type: object
+        list: true
+        fields:
+          - name: label
+            label: "Label"
+            type: string
+            required: true
+          - name: url
+            label: "URL"
+            type: string
+            required: true
+      - name: featured
+        label: "Featured on /home"
+        type: boolean
+        default: false
+      - name: draft
+        label: "Draft (hidden on the live site)"
+        type: boolean
+        default: false
+      - name: body
+        label: "Text"
+        type: rich-text

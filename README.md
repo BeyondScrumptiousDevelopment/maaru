@@ -243,14 +243,21 @@ After the first deploy, run the link check against the live site:
 BASE=https://maaru.me npm run check:links
 ```
 
-## A CMS later
+## Editing content in the browser (Pages CMS)
 
-The content is already plain Markdown in git, so a git-based CMS can sit on top with no rebuild. Each saved edit becomes a commit, and Cloudflare redeploys automatically.
+The site is set up for [Pages CMS](https://pagescms.org), a free, open-source CMS that edits the Markdown files in this GitHub repository. Its configuration is `.pages.yml` at the repository root. There's nothing to host and no database.
 
-**Recommendation: [Pages CMS](https://pagescms.org).** It's free and open source, signs in with your GitHub account, needs no server or OAuth proxy, and is configured by a single `.pages.yml` file that maps to the folders in `src/content/`. It handles images and works from a phone browser.
+**First time:**
+1. Go to **https://app.pagescms.org** and sign in with GitHub, using the account that can access `BeyondScrumptiousDevelopment/maaru`.
+2. When asked, install the Pages CMS GitHub App and give it access to the `maaru` repository. Because the repo belongs to an organisation, an owner of that organisation may need to approve it.
+3. Open the repository in Pages CMS and pick the branch the live site deploys from.
 
-Alternatives:
-- **Keystatic:** a polished editor from the Thinkmill team, with a first-class Astro integration. It can run in GitHub mode with Keystatic Cloud (free tier) or self-hosted auth.
-- **Decap CMS** (formerly Netlify CMS): mature and free. On Cloudflare it needs a small OAuth proxy for GitHub login, which can run on a free Cloudflare Worker.
+**After that:** open app.pagescms.org, choose maaru, and you'll see Journal, Visuals, Frequencies, Elsewhere and Experiments with a form for each. **Save** commits the change to GitHub, and Cloudflare rebuilds the site in about a minute.
 
-Check each one's current pricing and auth setup before you choose. None of them is installed in v1.
+- Uploaded images go to `src/assets/uploads/`, and Astro resizes them as usual.
+- Alt text is required whenever you add an image, otherwise the build stops. The form reminds you.
+- Tick **Draft** to keep an entry off the live site.
+- The sample entries point at the placeholder images, so their image previews may look empty in the CMS. Replace them with your own uploads.
+- New entries are named after their title (e.g. "Sunday kettles" becomes `sunday-kettles.md`, at `/journal/sunday-kettles/`).
+
+**If you ever outgrow it:** Keystatic (first-class Astro integration) and Decap CMS (needs a small OAuth proxy, which can run on a free Cloudflare Worker) are the alternatives. Check their current pricing and auth setup first.

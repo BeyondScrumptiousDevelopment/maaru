@@ -24,22 +24,37 @@ import frame12 from './assets/frame-12.jpg';
     <h1 class="landing__word">
       <Logo label="maaru." />
     </h1>
-    <div class="landing__scrap landing__scrap--word" aria-hidden="true"></div>
+    <div class="landing__scrap landing__scrap--word" aria-hidden="true" data-drag></div>
+    <div class="landing__marks" aria-hidden="true"></div>
 
-    <figure class="landing__photo landing__photo--a" data-parallax="6">
+    <figure class="landing__photo landing__photo--a" data-parallax="6" data-drag data-flip tabindex="0" role="button" aria-pressed="false" aria-label="Frame 07, Harrow. Press to turn it over; arrow keys move it.">
       <span class="landing__tape landing__tape--tl" aria-hidden="true"></span>
       <span class="landing__tape landing__tape--br" aria-hidden="true"></span>
-      <Picture src={frame07} alt="Placeholder film frame — a street running towards a low skyline." widths={[360, 560, 800]} sizes="(min-width: 900px) 24vw, 62vw" formats={['avif', 'webp']} loading="eager" />
-      <figcaption class="landing__label">Frame 07 — Harrow</figcaption>
+      <div class="landing__card">
+        <Picture src={frame07} alt="Placeholder film frame — a street running towards a low skyline." widths={[360, 560, 800]} sizes="(min-width: 900px) 24vw, 62vw" formats={['avif', 'webp']} loading="eager" />
+        <p class="landing__label landing__caption">Frame 07 — Harrow</p>
+        <div class="landing__back">
+          <p class="landing__label">Frame 07 — Harrow</p>
+          <p class="landing__back-note">Station Road, 07:12. Nobody waiting, for once.</p>
+          <p class="landing__label landing__back-meta">51.5806° N, 0.3420° W</p>
+        </div>
+      </div>
     </figure>
 
-    <figure class="landing__photo landing__photo--b" data-parallax="-5">
+    <figure class="landing__photo landing__photo--b" data-parallax="-5" data-drag data-flip tabindex="0" role="button" aria-pressed="false" aria-label="Frame 12, Mandvi. Press to turn it over; arrow keys move it.">
       <span class="landing__tape landing__tape--tr" aria-hidden="true"></span>
-      <Picture src={frame12} alt="Placeholder film frame — the sea at Mandvi with a wooden boat." widths={[360, 560, 800]} sizes="(min-width: 900px) 26vw, 70vw" formats={['avif', 'webp']} loading="eager" />
-      <figcaption class="landing__label">Frame 12 — Mandvi</figcaption>
+      <div class="landing__card">
+        <Picture src={frame12} alt="Placeholder film frame — the sea at Mandvi with a wooden boat." widths={[360, 560, 800]} sizes="(min-width: 900px) 26vw, 70vw" formats={['avif', 'webp']} loading="eager" />
+        <p class="landing__label landing__caption">Frame 12 — Mandvi</p>
+        <div class="landing__back">
+          <p class="landing__label">Frame 12 — Mandvi</p>
+          <p class="landing__back-note">Boats half-built on the sand. Somebody offered to sell me one.</p>
+          <p class="landing__label landing__back-meta">22.8333° N, 69.3500° E</p>
+        </div>
+      </div>
     </figure>
 
-    <div class="landing__stamp" data-parallax="3"><Stamp rotate={-14} label="The Maaru Collective stamp" /></div>
+    <div class="landing__stamp" data-parallax="3" data-drag data-stamp tabindex="0" role="button" aria-label="The Maaru Collective stamp. Press to stamp the wall; arrow keys move it."><Stamp rotate={-14} /></div>
 
     <div class="landing__note">
     <p class="landing__tagline">
@@ -62,6 +77,8 @@ import frame12 from './assets/frame-12.jpg';
 
   <footer class="landing__foot">
     <p class="landing__label">The Maaru Collective</p>
+    <p class="landing__hint landing__label" data-hint hidden>Move things around. It's your wall now.</p>
+    <button type="button" class="landing__tidy landing__label" data-tidy hidden>Tidy the wall ↺</button>
     <p class="landing__label">A creative collective of one</p>
   </footer>
 </div>
